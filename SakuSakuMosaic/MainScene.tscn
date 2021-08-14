@@ -1,6 +1,23 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
+[ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
+
+[sub_resource type="TileSet" id=1]
+0/name = "black-4x4.png 0"
+0/texture = ExtResource( 2 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 4, 4 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
 
 [node name="MainScene" type="Node2D"]
 
@@ -20,3 +37,24 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MiniTileMap" type="TileMap" parent="."]
+position = Vector2( 10, 74 )
+tile_set = SubResource( 1 )
+cell_size = Vector2( 4, 4 )
+format = 1
+tile_data = PoolIntArray( 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 0, 7, 0, 0, 8, 0, 0, 9, 0, 0, 10, 0, 0, 11, 0, 0, 12, 0, 0, 13, 0, 0, 14, 0, 0, 65536, 0, 0, 65537, 0, 0, 65550, 0, 0, 131072, 0, 0, 131074, 0, 0, 131086, 0, 0, 196608, 0, 0, 196611, 0, 0, 196622, 0, 0, 262144, 0, 0, 262148, 0, 0, 262158, 0, 0, 327680, 0, 0, 327685, 0, 0, 327694, 0, 0, 393216, 0, 0, 393222, 0, 0, 393230, 0, 0, 458752, 0, 0, 458759, 0, 0, 458766, 0, 0, 524288, 0, 0, 524296, 0, 0, 524302, 0, 0, 589824, 0, 0, 589833, 0, 0, 589838, 0, 0, 655360, 0, 0, 655370, 0, 0, 655374, 0, 0, 720896, 0, 0, 720907, 0, 0, 720910, 0, 0, 786432, 0, 0, 786444, 0, 0, 786446, 0, 0, 851968, 0, 0, 851981, 0, 0, 851982, 0, 0, 917504, 0, 0, 917505, 0, 0, 917506, 0, 0, 917507, 0, 0, 917508, 0, 0, 917509, 0, 0, 917510, 0, 0, 917511, 0, 0, 917512, 0, 0, 917513, 0, 0, 917514, 0, 0, 917515, 0, 0, 917516, 0, 0, 917517, 0, 0, 917518, 0, 0 )
+
+[node name="BoardBG" type="ColorRect" parent="."]
+margin_left = 10.0
+margin_top = 150.0
+margin_right = 490.0
+margin_bottom = 630.0
+color = Color( 0.972549, 0.972549, 0.878431, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TileMap" type="TileMap" parent="BoardBG"]
+cell_size = Vector2( 32, 32 )
+format = 1
