@@ -8,16 +8,29 @@ const UNKNOWN = -1
 
 var crnt_color = 3
 
+var NumLabel = load("res://NumLabel.tscn")
+
 func _ready():
 	for y in range(g.N_IMG_CELL_VERT):
+		var py = y * g.CELL_WIDTH
 		for x in range(g.N_IMG_CELL_HORZ):
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
+			var px = x * g.CELL_WIDTH
+			var nl = NumLabel.instance()
+			nl.add_color_override("font_color", Color.gray)
+			#if y % 2 == 0:
+			#	nl.add_color_override("font_color", Color.gray)
+			#else:
+			#	nl.add_color_override("font_color", Color.green)
+			nl.rect_position = Vector2(px, py)
+			#nl.text = String(x % 10)
+			$BoardBG.add_child(nl)
 	update_MiniMap()
 	pass # Replace with function body.
 func update_MiniMap():
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
-			$MiniTileMap.set_cell(x, y, BLACK if $BoardBG/TileMap.get_cell(x, y) == BLACK else -1)
+			$MiniMapBG/TileMap.set_cell(x, y, BLACK if $BoardBG/TileMap.get_cell(x, y) == BLACK else -1)
 func posToXY(pos):
 	var xy = $BoardBG/TileMap.world_to_map(pos - $BoardBG/TileMap.global_position)
 	if xy.x < 0 || xy.x >= g.N_IMG_CELL_HORZ || xy.y < 0 || xy.y >= g.N_IMG_CELL_VERT:
