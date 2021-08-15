@@ -7,10 +7,16 @@ const CROSS = 1
 const UNKNOWN = -1
 
 var crnt_color = 3
+var clues = []
+var clueLabels = []
 
 var NumLabel = load("res://NumLabel.tscn")
 
 func _ready():
+	clues.resize(g.ARY_SIZE)
+	for i in range(g.ARY_SIZE):
+		clues[i] = 0
+	clueLabels.resize(g.N_IMG_CELL_HORZ*g.N_IMG_CELL_VERT)
 	for y in range(g.N_IMG_CELL_VERT):
 		var py = y * g.CELL_WIDTH
 		for x in range(g.N_IMG_CELL_HORZ):
@@ -25,8 +31,38 @@ func _ready():
 			nl.rect_position = Vector2(px, py)
 			#nl.text = String(x % 10)
 			$BoardBG.add_child(nl)
+			clueLabels[x+y*g.N_IMG_CELL_HORZ] = nl
 	update_MiniMap()
 	pass # Replace with function body.
+func xyToAryIX(x, y):
+	return (y+1)*g.ARY_WIDTH + (x+1)
+func count_black(x, y):
+	var cnt = 0
+	if( $BoardBG/TileMap.get_cell(x-1, y-1) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y-1) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x+1, y-1) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x-1, y) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x+1, y) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x-1, y+1) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y+1) == BLACK ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x+1, y+1) == BLACK ):
+		cnt += 1;
+	return cnt
+func update_clues():
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			var cnt = count_black(x, y)
+			clueLabels[x+y*g.N_IMG_CELL_HORZ].text = String(cnt)
+			#var ix = xyToAryIX(x, y)
 func update_MiniMap():
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
@@ -51,3 +87,4 @@ func cell_pressed(x, y):
 	else:
 		$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	update_MiniMap()
+	update_clues()
