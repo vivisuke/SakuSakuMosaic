@@ -88,3 +88,16 @@ func cell_pressed(x, y):
 		$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	update_MiniMap()
 	update_clues()
+
+
+func _on_ClearButton_pressed():
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
+	update_clues()
+	update_MiniMap()
+	pass # Replace with function body.
+func _on_BasicButton_pressed():
+	pass # Replace with function body.
+
+
