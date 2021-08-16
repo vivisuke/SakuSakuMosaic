@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://images/basic_white.png" type="Texture" id=8]
 [ext_resource path="res://images/clear_black.png" type="Texture" id=9]
 [ext_resource path="res://images/clear_white.png" type="Texture" id=10]
+[ext_resource path="res://fonts/FlopDesignFONT.otf" type="DynamicFontData" id=11]
 
 [sub_resource type="TileSet" id=1]
 0/name = "black-4x4.png 0"
@@ -56,6 +57,10 @@
 1/shape_one_way_margin = 0.0
 1/shapes = [  ]
 1/z_index = 0
+
+[sub_resource type="DynamicFont" id=3]
+size = 20
+font_data = ExtResource( 11 )
 
 [node name="MainScene" type="Node2D"]
 script = ExtResource( 6 )
@@ -133,6 +138,18 @@ margin_right = 482.164
 margin_bottom = 716.923
 texture_normal = ExtResource( 7 )
 texture_pressed = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MessLabel" type="Label" parent="."]
+margin_left = 10.0
+margin_top = 641.0
+margin_right = 97.0
+margin_bottom = 662.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Message"
 __meta__ = {
 "_edit_use_anchors_": false
 }
