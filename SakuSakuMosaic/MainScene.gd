@@ -126,20 +126,33 @@ func _input(event):
 		if xy.x >= 0:
 			cell_pressed(xy.x, xy.y)
 func cell_pressed(x, y):
-	solving = false
-	solved = false
+	if solving:
+		clueLabels[x+y*g.N_IMG_CELL_HORZ].text = ""
+		ary_clues[xyToAryIX(x, y)] = -1
+		return
+	#solving = false
+	#solved = false
 	#print("(", x, ", ", y, ")")
-	if $BoardBG/TileMap.get_cell(x, y) == UNKNOWN:
-		$BoardBG/TileMap.set_cell(x, y, BLACK)
-	elif $BoardBG/TileMap.get_cell(x, y) == BLACK:
-		$BoardBG/TileMap.set_cell(x, y, CROSS)
+	if true:	# 問題作成モード
+		if $BoardBG/TileMap.get_cell(x, y) != BLACK:
+			$BoardBG/TileMap.set_cell(x, y, BLACK)
+		else:
+			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	else:
-		$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
+		if $BoardBG/TileMap.get_cell(x, y) == UNKNOWN:
+			$BoardBG/TileMap.set_cell(x, y, BLACK)
+		elif $BoardBG/TileMap.get_cell(x, y) == BLACK:
+			$BoardBG/TileMap.set_cell(x, y, CROSS)
+		else:
+			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	update_MiniMap()
 	update_cluesLabel()
 
 
 func _on_ClearButton_pressed():
+	solving = false
+	solved = false
+	$MessLabel.text = ""
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
