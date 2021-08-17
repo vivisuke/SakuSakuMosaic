@@ -138,6 +138,7 @@ class Board:
 			for x in range(g.N_IMG_CELL_HORZ):
 				ary_state[g.xyToAryIX(x, y)] = UNKNOWN
 		var uc0 = 0
+		var loop = 0
 		while true:
 			for y in range(g.N_IMG_CELL_VERT):
 				for x in range(g.N_IMG_CELL_HORZ):
@@ -147,10 +148,11 @@ class Board:
 					fill_cross(g.xyToAryIX(x, y))
 			var uc = count_ary_unknown()
 			if uc == 0:
-				return true
+				return loop		# ループ回数を返す
 			if uc == uc0:
-				return false
+				return -1
 			uc0 = uc
+			loop += 1
 	func gen_quest(clueLabels):
 		setup(clueLabels)
 		ix_ary.shuffle();
@@ -162,11 +164,12 @@ class Board:
 			var ix = ix_ary[i]
 			var t = ary_clues[ix]
 			ary_clues[ix] = -1
-			if !solve():
+			if solve() < 0:
 				ary_clues[ix] = t
 
 var solving = false		# 
 var solved = false
+var quest_genarated = false
 var crnt_color = 3
 var clueLabels = []		#	手がかり数字ラベル配列（番人なし）
 var ary_clues = []			#	手がかり数字配列（番人あり）、番人部分は 0
@@ -285,8 +288,16 @@ func posToXY(pos):
 	if xy.x < 0 || xy.x >= g.N_IMG_CELL_HORZ || xy.y < 0 || xy.y >= g.N_IMG_CELL_VERT:
 		return Vector2(-1, -1)
 	return xy
+func restore_state():
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			$BoardBG/TileMap.set_cell(x, y, ary_state[g.xyToAryIX(x, y)])
+	quest_genarated = false
 func _input(event):
 	if event is InputEventMouseButton and event.pressed:
+		if quest_genarated:		# 問題生成直後の場合
+			restore_state()
+			return
 		var xy = posToXY(event.position)
 		print(xy)
 		if xy.x >= 0:
@@ -318,6 +329,7 @@ func cell_pressed(x, y):
 func _on_ClearButton_pressed():
 	solving = false
 	solved = false
+	quest_genarated = false
 	$MessLabel.text = ""
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
@@ -374,6 +386,9 @@ func remove_clues_randomly():
 					clueLabels[g.xyToBoardIX(x, y)].text = ""
 					ary_clues[g.xyToAryIX(x, y)] = -1
 func _on_BasicButton_pressed():
+	if quest_genarated:
+		restore_state()
+		return
 	bd.gen_quest(clueLabels)
 	#bd.setup(clueLabels)
 	#print(bd.ary_clues)
@@ -381,9 +396,14 @@ func _on_BasicButton_pressed():
 	#print(bd.solve())
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
+			var ix = g.xyToAryIX(x, y)
+			ary_state[ix] = $BoardBG/TileMap.get_cell(x, y)
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
-			var c = bd.ary_clues[g.xyToAryIX(x, y)]
+			var c = bd.ary_clues[ix]
 			clueLabels[g.xyToBoardIX(x, y)].text = String(c) if c >= 0 else ""
+	var diffi = bd.solve()
+	$MessLabel.text = "Difficulty = %d" % diffi
+	quest_genarated = true
 	return
 	if !solving:
 		solving = true
