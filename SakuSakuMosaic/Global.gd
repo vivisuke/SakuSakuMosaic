@@ -13,5 +13,10 @@ const ARY_WIDTH = N_IMG_CELL_HORZ + 2
 const ARY_HEIGHT = N_IMG_CELL_VERT + 2
 const ARY_SIZE = ARY_WIDTH * ARY_HEIGHT
 
+func xyToAryIX(x, y):
+	return (y+1)*ARY_WIDTH + (x+1)
+func xyToBoardIX(x, y):
+	return y*N_IMG_CELL_HORZ + x
+
 func _ready():
 	pass # Replace with function body.
