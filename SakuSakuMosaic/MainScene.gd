@@ -455,6 +455,10 @@ func update_ModeButtons():
 func _on_SolveButton_pressed():
 	editMode = false
 	update_ModeButtons()
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			ary_state[g.xyToAryIX(x, y)] = $BoardBG/TileMap.get_cell(x, y)	# 現状態を保存
+			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	pass # Replace with function body.
 
 
