@@ -169,11 +169,14 @@ class Board:
 
 ### End of class Board
 
-var editMode = true		# 問題作成モード
-var solving = false		# 
+var editMode = true			# 問題作成モード
+var long_pressed = false	# 長押しされた
+var solving = false			# 
 var solved = false
 var quest_genarated = false
 var crnt_color = 3
+var pressed_tick = 0		# 押下時タイム
+var pressed_xy = Vector2(-1, -1)
 var clueLabels = []		#	手がかり数字ラベル配列（番人なし）
 var ary_clues = []			#	手がかり数字配列（番人あり）、番人部分は 0
 var ary_state = []			#	状態配列（番人あり）、番人部分は CROSS
@@ -217,24 +220,15 @@ func _ready():
 #	return (y+1)*g.ARY_WIDTH + (x+1)
 func count_black(x, y):		# (x, y) を中心とする 3x3 ブロック内の黒数をカウント
 	var cnt = 0
-	if( $BoardBG/TileMap.get_cell(x-1, y-1) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x, y-1) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x+1, y-1) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x-1, y) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x, y) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x+1, y) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x-1, y+1) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x, y+1) == BLACK ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x+1, y+1) == BLACK ):
-		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x-1, y-1) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y-1) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x+1, y-1) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x-1, y) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x+1, y) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x-1, y+1) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y+1) == BLACK ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x+1, y+1) == BLACK ): cnt += 1;
 	return cnt
 func count_cross(x, y):		# (x, y) を中心とする 3x3 ブロック内のバツ数をカウント（盤外はバツとみなす）
 	var cnt = 0
@@ -320,14 +314,23 @@ func restore_state():
 			$BoardBG/TileMap.set_cell(x, y, ary_state[g.xyToAryIX(x, y)])
 	quest_genarated = false
 func _input(event):
-	if event is InputEventMouseButton and event.pressed:
-		if quest_genarated:		# 問題生成直後の場合
-			restore_state()
-			return
+	if event is InputEventMouseButton:
 		var xy = posToXY(event.position)
 		print(xy)
-		if xy.x >= 0:
-			cell_pressed(xy.x, xy.y)
+		if event.doubleclick: print("doubleclick")
+		elif event.pressed:
+			print("pressed")
+			pressed_xy = xy
+		else:	# released
+			print("released")
+			if quest_genarated:		# 問題生成直後の場合
+				restore_state()
+				return
+			if xy.x >= 0 && xy == pressed_xy:
+				cell_pressed(xy.x, xy.y)
+		#elif event.doubleclick:
+		#	print("doubleclick")
+		
 func update_cluesLabelColor(x, y):
 	if x < 0 || x >= g.N_IMG_CELL_HORZ || y < 0 || y >= g.N_IMG_CELL_VERT:
 		return
@@ -340,10 +343,8 @@ func update_cluesLabelColor(x, y):
 	var col
 	if cb + cc == 9:	# 全部埋まっている場合
 		col = Color.gray if cb == cn else Color.red			# 正しければグレイ、間違っていれば赤
-	elif cb == cn:
-		col = Color.green		# 手がかり数字の数だけ黒がある場合
-	elif cb > cn:
-		col = Color.red			# 手がかり数字の数より黒が多い場合
+	elif cb == cn: col = Color.green		# 手がかり数字の数だけ黒がある場合
+	elif cb > cn: col = Color.red			# 手がかり数字の数より黒が多い場合
 	else:
 		col = Color.white if $BoardBG/TileMap.get_cell(x, y) == BLACK else Color.black
 	clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", col)
