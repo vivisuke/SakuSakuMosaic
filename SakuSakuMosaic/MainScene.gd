@@ -385,7 +385,8 @@ func _on_ClearButton_pressed():
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
-	update_cluesLabel()
+	if editMode:
+		update_cluesLabel()
 	update_MiniMap()
 	pass # Replace with function body.
 func fill_black(ix):	# 手がかり数字＋周りのバツ数が９ならばバツ以外の場所を黒にする
