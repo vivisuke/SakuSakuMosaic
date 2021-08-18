@@ -315,19 +315,22 @@ func cell_pressed(x, y):
 	#solving = false
 	#solved = false
 	#print("(", x, ", ", y, ")")
-	if editMode:	# 問題作成モード
+	if editMode:	# 問題を作る モード
 		if $BoardBG/TileMap.get_cell(x, y) != BLACK:
 			$BoardBG/TileMap.set_cell(x, y, BLACK)
 		else:
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 		update_cluesLabel()
-	else:
+	else:			# 問題を解くモード
 		if $BoardBG/TileMap.get_cell(x, y) == UNKNOWN:
 			$BoardBG/TileMap.set_cell(x, y, BLACK)
+			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.white)
 		elif $BoardBG/TileMap.get_cell(x, y) == BLACK:
 			$BoardBG/TileMap.set_cell(x, y, CROSS)
+			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.black)
 		else:
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
+			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.black)
 	update_MiniMap()
 
 
