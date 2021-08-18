@@ -28,7 +28,7 @@ class Board:
 			for x in range(g.N_IMG_CELL_HORZ):
 				var ix = g.xyToAryIX(x, y)
 				ary_state[ix] = UNKNOWN
-				var label = clueLabels[x+y*g.N_IMG_CELL_HORZ]
+				var label = clueLabels[g.xyToBoardIX(x, y)]
 				ary_clues[ix] = int(label.text)
 				#ary_clues[ix] = -1 if label.text == "" else int(label.text)
 	func print_clues():
@@ -453,16 +453,22 @@ func update_ModeButtons():
 	$ModeContainer/GenQuestButton/Underline.visible = editMode
 
 func _on_SolveButton_pressed():
+	if !editMode:
+		return
 	editMode = false
 	update_ModeButtons()
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
 			ary_state[g.xyToAryIX(x, y)] = $BoardBG/TileMap.get_cell(x, y)	# 現状態を保存
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
+			var label = clueLabels[g.xyToBoardIX(x, y)]
+			label.add_color_override("font_color", Color.black)
 	pass # Replace with function body.
 
 
 func _on_GenQuestButton_pressed():
+	if editMode:
+		return
 	editMode = true
 	update_ModeButtons()
 	pass # Replace with function body.
