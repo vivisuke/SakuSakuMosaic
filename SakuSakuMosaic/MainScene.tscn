@@ -30,10 +30,10 @@
 0/shapes = [  ]
 0/z_index = 0
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=2]
 font_data = ExtResource( 11 )
 
-[sub_resource type="TileSet" id=2]
+[sub_resource type="TileSet" id=3]
 0/name = "black-32x32.png 0"
 0/texture = ExtResource( 4 )
 0/tex_offset = Vector2( 0, 0 )
@@ -63,7 +63,7 @@ font_data = ExtResource( 11 )
 1/shapes = [  ]
 1/z_index = 0
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=4]
 size = 20
 font_data = ExtResource( 11 )
 
@@ -115,7 +115,7 @@ __meta__ = {
 [node name="SolveButton" type="Button" parent="ModeContainer"]
 margin_right = 142.0
 margin_bottom = 54.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 2 )
 text = "問題を解く"
 icon = ExtResource( 13 )
 
@@ -133,7 +133,7 @@ __meta__ = {
 margin_left = 146.0
 margin_right = 288.0
 margin_bottom = 54.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 2 )
 text = "問題を作る"
 icon = ExtResource( 12 )
 
@@ -157,7 +157,7 @@ __meta__ = {
 }
 
 [node name="TileMap" type="TileMap" parent="BoardBG"]
-tile_set = SubResource( 2 )
+tile_set = SubResource( 3 )
 cell_size = Vector2( 32, 32 )
 format = 1
 
@@ -194,7 +194,7 @@ margin_left = 10.0
 margin_top = 641.0
 margin_right = 97.0
 margin_bottom = 662.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Message"
 __meta__ = {
