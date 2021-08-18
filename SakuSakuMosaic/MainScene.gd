@@ -215,7 +215,7 @@ func _ready():
 	pass # Replace with function body.
 #func xyToAryIX(x, y):
 #	return (y+1)*g.ARY_WIDTH + (x+1)
-func count_black(x, y):
+func count_black(x, y):		# (x, y) を中心とする 3x3 ブロック内の黒数をカウント
 	var cnt = 0
 	if( $BoardBG/TileMap.get_cell(x-1, y-1) == BLACK ):
 		cnt += 1;
@@ -234,6 +234,27 @@ func count_black(x, y):
 	if( $BoardBG/TileMap.get_cell(x, y+1) == BLACK ):
 		cnt += 1;
 	if( $BoardBG/TileMap.get_cell(x+1, y+1) == BLACK ):
+		cnt += 1;
+	return cnt
+func count_cross(x, y):		# (x, y) を中心とする 3x3 ブロック内のバツ数をカウント（盤外はバツとみなす）
+	var cnt = 0
+	if( x == 0 || y == 0 || $BoardBG/TileMap.get_cell(x-1, y-1) == CROSS ):
+		cnt += 1;
+	if( y == 0 || $BoardBG/TileMap.get_cell(x, y-1) == CROSS ):
+		cnt += 1;
+	if( x == g.N_IMG_CELL_HORZ - 1 || y == 0 || $BoardBG/TileMap.get_cell(x+1, y-1) == CROSS ):
+		cnt += 1;
+	if( x == 0 || $BoardBG/TileMap.get_cell(x-1, y) == CROSS ):
+		cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y) == CROSS ):
+		cnt += 1;
+	if( x == g.N_IMG_CELL_HORZ - 1 || $BoardBG/TileMap.get_cell(x+1, y) == CROSS ):
+		cnt += 1;
+	if( x == 0 || y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x-1, y+1) == CROSS ):
+		cnt += 1;
+	if( y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x, y+1) == CROSS ):
+		cnt += 1;
+	if( x == g.N_IMG_CELL_HORZ - 1 || y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x+1, y+1) == CROSS ):
 		cnt += 1;
 	return cnt
 func count_ary_black(ix):		#	ix を中心とする 3x3 ブロック内の 黒 数を数える
@@ -307,6 +328,25 @@ func _input(event):
 		print(xy)
 		if xy.x >= 0:
 			cell_pressed(xy.x, xy.y)
+func update_cluesLabelColor(x, y):
+	if x < 0 || x >= g.N_IMG_CELL_HORZ || y < 0 || y >= g.N_IMG_CELL_VERT:
+		return
+	var label = clueLabels[g.xyToBoardIX(x, y)]
+	if label.text == "":
+		return
+	var cn = int(label.text)		# 手がかり数字
+	var cb = count_black(x, y)		# 3x3 領域内黒数
+	var cc = count_cross(x, y)		# 3x3 領域内バツ数
+	var col
+	if cb + cc == 9:	# 全部埋まっている場合
+		col = Color.gray if cb == cn else Color.red			# 正しければグレイ、間違っていれば赤
+	elif cb == cn:
+		col = Color.green		# 手がかり数字の数だけ黒がある場合
+	elif cb > cn:
+		col = Color.red			# 手がかり数字の数より黒が多い場合
+	else:
+		col = Color.white if $BoardBG/TileMap.get_cell(x, y) == BLACK else Color.black
+	clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", col)
 func cell_pressed(x, y):
 	#if solving:
 	#	clueLabels[g.xyToBoardIX(x, y)].text = ""
@@ -324,13 +364,16 @@ func cell_pressed(x, y):
 	else:			# 問題を解くモード
 		if $BoardBG/TileMap.get_cell(x, y) == UNKNOWN:
 			$BoardBG/TileMap.set_cell(x, y, BLACK)
-			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.white)
+			#clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.white)
 		elif $BoardBG/TileMap.get_cell(x, y) == BLACK:
 			$BoardBG/TileMap.set_cell(x, y, CROSS)
-			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.black)
+			#clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.black)
 		else:
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
-			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.black)
+			#clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.black)
+		for v in range(-1, 2):
+			for h in range(-1, 2):
+				update_cluesLabelColor(x+h, y+v)
 	update_MiniMap()
 
 
@@ -464,8 +507,11 @@ func _on_SolveButton_pressed():
 		for x in range(g.N_IMG_CELL_HORZ):
 			ary_state[g.xyToAryIX(x, y)] = $BoardBG/TileMap.get_cell(x, y)	# 現状態を保存
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
-			var label = clueLabels[g.xyToBoardIX(x, y)]
-			label.add_color_override("font_color", Color.black)
+			#var label = clueLabels[g.xyToBoardIX(x, y)]
+			#label.add_color_override("font_color", Color.black)
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			update_cluesLabelColor(x, y)
 	pass # Replace with function body.
 
 
