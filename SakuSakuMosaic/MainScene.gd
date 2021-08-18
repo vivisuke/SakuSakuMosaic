@@ -167,6 +167,9 @@ class Board:
 			if solve() < 0:
 				ary_clues[ix] = t
 
+### End of class Board
+
+var editMode = true		# 問題作成モード
 var solving = false		# 
 var solved = false
 var quest_genarated = false
@@ -185,6 +188,7 @@ var NumLabel = load("res://NumLabel.tscn")
 func _ready():
 	#print(bd.ary_clues.size())
 	rng.randomize()
+	editMode = true
 	ary_clues.resize(g.ARY_SIZE)
 	ary_state.resize(g.ARY_SIZE)
 	for i in range(g.ARY_SIZE):
@@ -207,6 +211,7 @@ func _ready():
 			$BoardBG.add_child(nl)
 			clueLabels[g.xyToBoardIX(x, y)] = nl
 	update_MiniMap()
+	update_ModeButtons()
 	pass # Replace with function body.
 #func xyToAryIX(x, y):
 #	return (y+1)*g.ARY_WIDTH + (x+1)
@@ -303,18 +308,19 @@ func _input(event):
 		if xy.x >= 0:
 			cell_pressed(xy.x, xy.y)
 func cell_pressed(x, y):
-	if solving:
-		clueLabels[g.xyToBoardIX(x, y)].text = ""
-		ary_clues[g.xyToAryIX(x, y)] = -1
-		return
+	#if solving:
+	#	clueLabels[g.xyToBoardIX(x, y)].text = ""
+	#	ary_clues[g.xyToAryIX(x, y)] = -1
+	#	return
 	#solving = false
 	#solved = false
 	#print("(", x, ", ", y, ")")
-	if true:	# 問題作成モード
+	if editMode:	# 問題作成モード
 		if $BoardBG/TileMap.get_cell(x, y) != BLACK:
 			$BoardBG/TileMap.set_cell(x, y, BLACK)
 		else:
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
+		update_cluesLabel()
 	else:
 		if $BoardBG/TileMap.get_cell(x, y) == UNKNOWN:
 			$BoardBG/TileMap.set_cell(x, y, BLACK)
@@ -323,7 +329,6 @@ func cell_pressed(x, y):
 		else:
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	update_MiniMap()
-	update_cluesLabel()
 
 
 func _on_ClearButton_pressed():
@@ -443,3 +448,17 @@ func _on_BasicButton_pressed():
 	pass # Replace with function body.
 
 
+func update_ModeButtons():
+	$ModeContainer/SolveButton/Underline.visible = !editMode
+	$ModeContainer/GenQuestButton/Underline.visible = editMode
+
+func _on_SolveButton_pressed():
+	editMode = false
+	update_ModeButtons()
+	pass # Replace with function body.
+
+
+func _on_GenQuestButton_pressed():
+	editMode = true
+	update_ModeButtons()
+	pass # Replace with function body.
