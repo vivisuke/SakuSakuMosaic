@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://fonts/FlopDesignFONT.otf" type="DynamicFontData" id=11]
 [ext_resource path="res://images/edit_white.png" type="Texture" id=12]
 [ext_resource path="res://images/light_white.png" type="Texture" id=13]
+[ext_resource path="res://sounds/button-3.mp3" type="AudioStream" id=14]
 
 [sub_resource type="TileSet" id=1]
 0/name = "black-4x4.png 0"
@@ -200,6 +201,9 @@ text = "Message"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PressedAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 14 )
 
 [connection signal="pressed" from="ModeContainer/SolveButton" to="." method="_on_SolveButton_pressed"]
 [connection signal="pressed" from="ModeContainer/GenQuestButton" to="." method="_on_GenQuestButton_pressed"]

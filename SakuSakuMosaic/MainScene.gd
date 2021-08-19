@@ -305,6 +305,7 @@ func _input(event):
 			if long_pressed: long_pressed = false
 			elif xy.x >= 0 && xy == pressed_xy:
 				cell_pressed(xy.x, xy.y)
+				$PressedAudio.play()
 			pressed = false
 		#elif event.doubleclick:
 		#	print("doubleclick")
@@ -314,6 +315,7 @@ func _process(delta):
 			print("long_pressed")
 			long_pressed = true
 			cell_long_pressed()
+			$PressedAudio.play()
 func update_cluesLabelColor(x, y):
 	if x < 0 || x >= g.N_IMG_CELL_HORZ || y < 0 || y >= g.N_IMG_CELL_VERT:
 		return
