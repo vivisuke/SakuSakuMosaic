@@ -170,12 +170,13 @@ class Board:
 ### End of class Board
 
 var editMode = true			# 問題作成モード
+var pressed = false;		# true for マウス押下時
 var long_pressed = false	# 長押しされた
 var solving = false			# 
 var solved = false
 var quest_genarated = false
 var crnt_color = 3
-var pressed_tick = 0		# 押下時タイム
+var pressed_ticks = 0		# 押下時タイム
 var pressed_xy = Vector2(-1, -1)
 var clueLabels = []		#	手がかり数字ラベル配列（番人なし）
 var ary_clues = []			#	手がかり数字配列（番人あり）、番人部分は 0
@@ -232,66 +233,39 @@ func count_black(x, y):		# (x, y) を中心とする 3x3 ブロック内の黒�
 	return cnt
 func count_cross(x, y):		# (x, y) を中心とする 3x3 ブロック内のバツ数をカウント（盤外はバツとみなす）
 	var cnt = 0
-	if( x == 0 || y == 0 || $BoardBG/TileMap.get_cell(x-1, y-1) == CROSS ):
-		cnt += 1;
-	if( y == 0 || $BoardBG/TileMap.get_cell(x, y-1) == CROSS ):
-		cnt += 1;
-	if( x == g.N_IMG_CELL_HORZ - 1 || y == 0 || $BoardBG/TileMap.get_cell(x+1, y-1) == CROSS ):
-		cnt += 1;
-	if( x == 0 || $BoardBG/TileMap.get_cell(x-1, y) == CROSS ):
-		cnt += 1;
-	if( $BoardBG/TileMap.get_cell(x, y) == CROSS ):
-		cnt += 1;
-	if( x == g.N_IMG_CELL_HORZ - 1 || $BoardBG/TileMap.get_cell(x+1, y) == CROSS ):
-		cnt += 1;
-	if( x == 0 || y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x-1, y+1) == CROSS ):
-		cnt += 1;
-	if( y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x, y+1) == CROSS ):
-		cnt += 1;
-	if( x == g.N_IMG_CELL_HORZ - 1 || y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x+1, y+1) == CROSS ):
-		cnt += 1;
+	if( x == 0 || y == 0 || $BoardBG/TileMap.get_cell(x-1, y-1) == CROSS ): cnt += 1;
+	if( y == 0 || $BoardBG/TileMap.get_cell(x, y-1) == CROSS ): cnt += 1;
+	if( x == g.N_IMG_CELL_HORZ - 1 || y == 0 || $BoardBG/TileMap.get_cell(x+1, y-1) == CROSS ): cnt += 1;
+	if( x == 0 || $BoardBG/TileMap.get_cell(x-1, y) == CROSS ): cnt += 1;
+	if( $BoardBG/TileMap.get_cell(x, y) == CROSS ): cnt += 1;
+	if( x == g.N_IMG_CELL_HORZ - 1 || $BoardBG/TileMap.get_cell(x+1, y) == CROSS ): cnt += 1;
+	if( x == 0 || y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x-1, y+1) == CROSS ): cnt += 1;
+	if( y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x, y+1) == CROSS ): cnt += 1;
+	if( x == g.N_IMG_CELL_HORZ - 1 || y == g.N_IMG_CELL_VERT - 1 || $BoardBG/TileMap.get_cell(x+1, y+1) == CROSS ): cnt += 1;
 	return cnt
 func count_ary_black(ix):		#	ix を中心とする 3x3 ブロック内の 黒 数を数える
 	var cnt = 0
-	if( ary_state[ix-g.ARY_WIDTH-1] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix-g.ARY_WIDTH] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix-g.ARY_WIDTH+1] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix-1] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix+1] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix+g.ARY_WIDTH-1] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix+g.ARY_WIDTH] == BLACK ):
-		cnt += 1;
-	if( ary_state[ix+g.ARY_WIDTH+1] == BLACK ):
-		cnt += 1;
+	if( ary_state[ix-g.ARY_WIDTH-1] == BLACK ): cnt += 1;
+	if( ary_state[ix-g.ARY_WIDTH] == BLACK ): cnt += 1;
+	if( ary_state[ix-g.ARY_WIDTH+1] == BLACK ): cnt += 1;
+	if( ary_state[ix-1] == BLACK ): cnt += 1;
+	if( ary_state[ix] == BLACK ): cnt += 1;
+	if( ary_state[ix+1] == BLACK ): cnt += 1;
+	if( ary_state[ix+g.ARY_WIDTH-1] == BLACK ): cnt += 1;
+	if( ary_state[ix+g.ARY_WIDTH] == BLACK ): cnt += 1;
+	if( ary_state[ix+g.ARY_WIDTH+1] == BLACK ): cnt += 1;
 	return cnt
 func count_ary_cross(ix):		#	ix を中心とする 3x3 ブロック内の バツ 数を数える
 	var cnt = 0
-	if( ary_state[ix-g.ARY_WIDTH-1] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix-g.ARY_WIDTH] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix-g.ARY_WIDTH+1] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix-1] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix+1] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix+g.ARY_WIDTH-1] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix+g.ARY_WIDTH] == CROSS ):
-		cnt += 1;
-	if( ary_state[ix+g.ARY_WIDTH+1] == CROSS ):
-		cnt += 1;
+	if( ary_state[ix-g.ARY_WIDTH-1] == CROSS ): cnt += 1;
+	if( ary_state[ix-g.ARY_WIDTH] == CROSS ): cnt += 1;
+	if( ary_state[ix-g.ARY_WIDTH+1] == CROSS ): cnt += 1;
+	if( ary_state[ix-1] == CROSS ): cnt += 1;
+	if( ary_state[ix] == CROSS ): cnt += 1;
+	if( ary_state[ix+1] == CROSS ): cnt += 1;
+	if( ary_state[ix+g.ARY_WIDTH-1] == CROSS ): cnt += 1;
+	if( ary_state[ix+g.ARY_WIDTH] == CROSS ): cnt += 1;
+	if( ary_state[ix+g.ARY_WIDTH+1] == CROSS ): cnt += 1;
 	return cnt
 func update_cluesLabel():
 	for y in range(g.N_IMG_CELL_VERT):
@@ -320,17 +294,26 @@ func _input(event):
 		if event.doubleclick: print("doubleclick")
 		elif event.pressed:
 			print("pressed")
+			pressed = true
 			pressed_xy = xy
+			pressed_ticks = OS.get_ticks_msec()
 		else:	# released
 			print("released")
 			if quest_genarated:		# 問題生成直後の場合
 				restore_state()
 				return
-			if xy.x >= 0 && xy == pressed_xy:
+			if long_pressed: long_pressed = false
+			elif xy.x >= 0 && xy == pressed_xy:
 				cell_pressed(xy.x, xy.y)
+			pressed = false
 		#elif event.doubleclick:
 		#	print("doubleclick")
-		
+func _process(delta):
+	if pressed && !long_pressed:
+		if OS.get_ticks_msec() - pressed_ticks >= 500:		# 0.5秒経過
+			print("long_pressed")
+			long_pressed = true
+			cell_long_pressed()
 func update_cluesLabelColor(x, y):
 	if x < 0 || x >= g.N_IMG_CELL_HORZ || y < 0 || y >= g.N_IMG_CELL_VERT:
 		return
@@ -376,8 +359,37 @@ func cell_pressed(x, y):
 			for h in range(-1, 2):
 				update_cluesLabelColor(x+h, y+v)
 	update_MiniMap()
-
-
+func set_cell(x, y, v):
+	if x >= 0 && x < g.N_IMG_CELL_HORZ && y >= 0 && y < g.N_IMG_CELL_VERT:
+		$BoardBG/TileMap.set_cell(x, y, v)
+func cell_long_pressed():
+	var x = pressed_xy.x
+	var y = pressed_xy.y
+	var label = clueLabels[g.xyToBoardIX(x, y)]
+	if label.text == "": return
+	var cn = int(label.text)
+	var cb = count_black(x, y)
+	var cc = count_cross(x, y)
+	if cn == 0:
+		for h in range(-1, 2):
+			for v in range(-1, 2):
+				set_cell(x+h, y+v, CROSS)
+	elif cn == cb:
+		for h in range(-1, 2):
+			for v in range(-1, 2):
+				if $BoardBG/TileMap.get_cell(x+h, y+v) == UNKNOWN:
+					set_cell(x+h, y+v, CROSS)
+	elif cn + cc == 9:
+		for h in range(-1, 2):
+			for v in range(-1, 2):
+				if $BoardBG/TileMap.get_cell(x+h, y+v) == UNKNOWN:
+					set_cell(x+h, y+v, BLACK)
+	else:
+		return
+	for h in range(-2, 3):
+		for v in range(-2, 3):
+			update_cluesLabelColor(x+h, y+v)
+	pass
 func _on_ClearButton_pressed():
 	solving = false
 	solved = false
@@ -397,45 +409,27 @@ func _on_ClearButton_pressed():
 func fill_black(ix):	# 手がかり数字＋周りのバツ数が９ならばバツ以外の場所を黒にする
 	var cnt = count_ary_cross(ix)
 	if ary_clues[ix] >= 0 && ary_clues[ix] + cnt == 9:
-		if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN:
-			ary_state[ix-g.ARY_WIDTH-1] = BLACK
-		if ary_state[ix-g.ARY_WIDTH] == UNKNOWN:
-			ary_state[ix-g.ARY_WIDTH] = BLACK
-		if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN:
-			ary_state[ix-g.ARY_WIDTH+1] = BLACK
-		if ary_state[ix-1] == UNKNOWN:
-			ary_state[ix-1] = BLACK
-		if ary_state[ix] == UNKNOWN:
-			ary_state[ix] = BLACK
-		if ary_state[ix+1] == UNKNOWN:
-			ary_state[ix+1] = BLACK
-		if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN:
-			ary_state[ix+g.ARY_WIDTH-1] = BLACK
-		if ary_state[ix+g.ARY_WIDTH] == UNKNOWN:
-			ary_state[ix+g.ARY_WIDTH] = BLACK
-		if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN:
-			ary_state[ix+g.ARY_WIDTH+1] = BLACK
+		if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN: ary_state[ix-g.ARY_WIDTH-1] = BLACK
+		if ary_state[ix-g.ARY_WIDTH] == UNKNOWN: ary_state[ix-g.ARY_WIDTH] = BLACK
+		if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN: ary_state[ix-g.ARY_WIDTH+1] = BLACK
+		if ary_state[ix-1] == UNKNOWN: ary_state[ix-1] = BLACK
+		if ary_state[ix] == UNKNOWN: ary_state[ix] = BLACK
+		if ary_state[ix+1] == UNKNOWN: ary_state[ix+1] = BLACK
+		if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN: ary_state[ix+g.ARY_WIDTH-1] = BLACK
+		if ary_state[ix+g.ARY_WIDTH] == UNKNOWN: ary_state[ix+g.ARY_WIDTH] = BLACK
+		if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN: ary_state[ix+g.ARY_WIDTH+1] = BLACK
 func fill_cross(ix):	# 手がかり数字 == 周りの黒数 ならば UNKNOWN の場所をバツにする
 	var cnt = count_ary_black(ix)
 	if ary_clues[ix] >= 0 && ary_clues[ix] == cnt:
-		if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN:
-			ary_state[ix-g.ARY_WIDTH-1] = CROSS
-		if ary_state[ix-g.ARY_WIDTH] == UNKNOWN:
-			ary_state[ix-g.ARY_WIDTH] = CROSS
-		if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN:
-			ary_state[ix-g.ARY_WIDTH+1] = CROSS
-		if ary_state[ix-1] == UNKNOWN:
-			ary_state[ix-1] = CROSS
-		if ary_state[ix] == UNKNOWN:
-			ary_state[ix] = CROSS
-		if ary_state[ix+1] == UNKNOWN:
-			ary_state[ix+1] = CROSS
-		if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN:
-			ary_state[ix+g.ARY_WIDTH-1] = CROSS
-		if ary_state[ix+g.ARY_WIDTH] == UNKNOWN:
-			ary_state[ix+g.ARY_WIDTH] = CROSS
-		if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN:
-			ary_state[ix+g.ARY_WIDTH+1] = CROSS
+		if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN: ary_state[ix-g.ARY_WIDTH-1] = CROSS
+		if ary_state[ix-g.ARY_WIDTH] == UNKNOWN: ary_state[ix-g.ARY_WIDTH] = CROSS
+		if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN: ary_state[ix-g.ARY_WIDTH+1] = CROSS
+		if ary_state[ix-1] == UNKNOWN: ary_state[ix-1] = CROSS
+		if ary_state[ix] == UNKNOWN: ary_state[ix] = CROSS
+		if ary_state[ix+1] == UNKNOWN: ary_state[ix+1] = CROSS
+		if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN: ary_state[ix+g.ARY_WIDTH-1] = CROSS
+		if ary_state[ix+g.ARY_WIDTH] == UNKNOWN: ary_state[ix+g.ARY_WIDTH] = CROSS
+		if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN: ary_state[ix+g.ARY_WIDTH+1] = CROSS
 func remove_clues_randomly():
 		for y in range(g.N_IMG_CELL_VERT):
 			for x in range(g.N_IMG_CELL_HORZ):
