@@ -310,7 +310,7 @@ func _input(event):
 		#elif event.doubleclick:
 		#	print("doubleclick")
 func _process(delta):
-	if pressed && !long_pressed:
+	if pressed && !long_pressed && !editMode:
 		if OS.get_ticks_msec() - pressed_ticks >= 500:		# 0.5秒経過
 			print("long_pressed")
 			long_pressed = true
