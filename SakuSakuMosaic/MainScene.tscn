@@ -132,7 +132,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GenQuestButton" type="Button" parent="ModeContainer"]
+[node name="EditPictButton" type="Button" parent="ModeContainer"]
 margin_left = 146.0
 margin_right = 288.0
 margin_bottom = 54.0
@@ -140,7 +140,7 @@ custom_fonts/font = SubResource( 2 )
 text = "問題を作る"
 icon = ExtResource( 12 )
 
-[node name="Underline" type="ColorRect" parent="ModeContainer/GenQuestButton"]
+[node name="Underline" type="ColorRect" parent="ModeContainer/EditPictButton"]
 margin_top = 54.0
 margin_right = 142.0
 margin_bottom = 62.0
@@ -219,7 +219,7 @@ __meta__ = {
 stream = ExtResource( 14 )
 
 [connection signal="pressed" from="ModeContainer/SolveButton" to="." method="_on_SolveButton_pressed"]
-[connection signal="pressed" from="ModeContainer/GenQuestButton" to="." method="_on_GenQuestButton_pressed"]
+[connection signal="pressed" from="ModeContainer/EditPictButton" to="." method="_on_EditPictButton_pressed"]
 [connection signal="pressed" from="ClearButton" to="." method="_on_ClearButton_pressed"]
 [connection signal="pressed" from="BasicButton" to="." method="_on_BasicButton_pressed"]
 [connection signal="pressed" from="TestButton" to="." method="_on_TestButton_pressed"]

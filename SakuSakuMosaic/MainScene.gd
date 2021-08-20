@@ -533,7 +533,7 @@ func _on_SolveButton_pressed():
 	update_allCluesLabel()
 	pass # Replace with function body.
 
-func _on_GenQuestButton_pressed():
+func _on_EditPictButton_pressed():
 	if editMode:
 		return
 	editMode = true
