@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -14,6 +14,8 @@
 [ext_resource path="res://images/edit_white.png" type="Texture" id=12]
 [ext_resource path="res://images/light_white.png" type="Texture" id=13]
 [ext_resource path="res://sounds/button-3.mp3" type="AudioStream" id=14]
+[ext_resource path="res://images/lightbulb_black.png" type="Texture" id=15]
+[ext_resource path="res://images/lightbulb_white.png" type="Texture" id=16]
 
 [sub_resource type="TileSet" id=1]
 0/name = "black-4x4.png 0"
@@ -180,12 +182,23 @@ __meta__ = {
 }
 
 [node name="BasicButton" type="TextureButton" parent="."]
-margin_left = 434.164
-margin_top = 668.923
-margin_right = 482.164
-margin_bottom = 716.923
+margin_left = 318.811
+margin_top = 671.92
+margin_right = 366.811
+margin_bottom = 719.92
 texture_normal = ExtResource( 7 )
 texture_pressed = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TestButton" type="TextureButton" parent="."]
+margin_left = 436.542
+margin_top = 671.92
+margin_right = 484.542
+margin_bottom = 719.92
+texture_normal = ExtResource( 15 )
+texture_pressed = ExtResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -209,3 +222,4 @@ stream = ExtResource( 14 )
 [connection signal="pressed" from="ModeContainer/GenQuestButton" to="." method="_on_GenQuestButton_pressed"]
 [connection signal="pressed" from="ClearButton" to="." method="_on_ClearButton_pressed"]
 [connection signal="pressed" from="BasicButton" to="." method="_on_BasicButton_pressed"]
+[connection signal="pressed" from="TestButton" to="." method="_on_TestButton_pressed"]

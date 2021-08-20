@@ -217,6 +217,22 @@ func _ready():
 	update_MiniMap()
 	update_ModeButtons()
 	pass # Replace with function body.
+func set_quest(quest : String):
+	if editMode: return
+	var x = 0
+	var y = 0
+	for i in range(quest.length()):
+		if quest[i] == ".":
+			clueLabels[g.xyToBoardIX(x, y)].text = ""
+		elif quest.ord_at(i) >= 0x30 && quest.ord_at(i) <= 0x39:
+			clueLabels[g.xyToBoardIX(x, y)].text = String(quest.ord_at(i) - 0x30)
+		else:
+			continue
+		x += 1
+		if x == g.N_IMG_CELL_HORZ:
+			x = 0
+			y += 1
+	pass
 #func xyToAryIX(x, y):
 #	return (y+1)*g.ARY_WIDTH + (x+1)
 func count_black(x, y):		# (x, y) を中心とする 3x3 ブロック内の黒数をカウント
@@ -333,6 +349,10 @@ func update_cluesLabelColor(x, y):
 	else:
 		col = Color.white if $BoardBG/TileMap.get_cell(x, y) == BLACK else Color.black
 	clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", col)
+func update_allCluesLabel():
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			update_cluesLabelColor(x, y)
 func cell_pressed(x, y):
 	#if solving:
 	#	clueLabels[g.xyToBoardIX(x, y)].text = ""
@@ -403,9 +423,7 @@ func _on_ClearButton_pressed():
 	if editMode:
 		update_cluesLabel()
 	else:
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				update_cluesLabelColor(x, y)
+		update_allCluesLabel()
 	update_MiniMap()
 	pass # Replace with function body.
 func fill_black(ix):	# 手がかり数字＋周りのバツ数が９ならばバツ以外の場所を黒にする
@@ -511,15 +529,20 @@ func _on_SolveButton_pressed():
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 			#var label = clueLabels[g.xyToBoardIX(x, y)]
 			#label.add_color_override("font_color", Color.black)
-	for y in range(g.N_IMG_CELL_VERT):
-		for x in range(g.N_IMG_CELL_HORZ):
-			update_cluesLabelColor(x, y)
+	update_allCluesLabel()
 	pass # Replace with function body.
-
 
 func _on_GenQuestButton_pressed():
 	if editMode:
 		return
 	editMode = true
 	update_ModeButtons()
+	pass # Replace with function body.
+
+
+func _on_TestButton_pressed():
+	if editMode:
+		return
+	set_quest(g.quest_list[0][g.KEY_CLUES])
+	update_allCluesLabel()
 	pass # Replace with function body.
