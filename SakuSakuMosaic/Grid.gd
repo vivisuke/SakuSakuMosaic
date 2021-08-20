@@ -16,12 +16,12 @@ func _draw():
 	# 縦線描画
 	var y2 = g.BOARD_HEIGHT + 1
 	for x in range(g.N_IMG_CELL_HORZ+1):
-		var col = Color.blue if x % 5 == 0 else Color.gray
+		var col = Color(0.25, 0.25, 0.25, 1) if x % 5 == 0 else Color.gray
 		draw_line(Vector2(x * g.CELL_WIDTH, 0), Vector2(x * g.CELL_WIDTH, y2), col)
 	# 横線描画
 	var x2 = g.BOARD_WIDTH + 1
 	for y in range(g.N_IMG_CELL_VERT+1):
-		var col = Color.blue if y % 5 == 0 else Color.gray
+		var col = Color(0.25, 0.25, 0.25, 1) if y % 5 == 0 else Color.gray
 		draw_line(Vector2(0, y * g.CELL_WIDTH), Vector2(x2, y * g.CELL_WIDTH), col)
 	# 太枠線描画
 	draw_line(Vector2(0, -1), Vector2(x2, -1), Color.black)

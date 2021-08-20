@@ -37,7 +37,7 @@ class Board:
 			for x in range(g.N_IMG_CELL_HORZ):
 				var ix = g.xyToAryIX(x, y)
 				if ary_clues[ix] < 0:
-					txt += " "
+					txt += "."
 				else:
 					txt += String(ary_clues[ix])
 			print(txt)
@@ -477,7 +477,7 @@ func _on_BasicButton_pressed():
 	$MessLabel.text = "Difficulty = %d" % diffi
 	quest_genarated = true
 	return
-	if !solving:
+"""	if !solving:
 		solving = true
 		remove_clues_randomly()
 		$MessLabel.text = "Solving..."
@@ -513,7 +513,7 @@ func _on_BasicButton_pressed():
 		solved = true
 		$MessLabel.text = "Solved."
 	pass # Replace with function body.
-
+"""
 
 func update_ModeButtons():
 	$ModeContainer/SolveButton/Underline.visible = !editMode
