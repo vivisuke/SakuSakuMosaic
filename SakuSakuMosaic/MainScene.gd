@@ -178,7 +178,8 @@ var quest_genarated = false
 var crnt_color = 3
 var pressed_ticks = 0		# 押下時タイム
 var pressed_xy = Vector2(-1, -1)
-var clueLabels = []		#	手がかり数字ラベル配列（番人なし）
+var clueLabels = []			#	手がかり数字ラベル配列（番人なし）
+var saved_state = []		#	問題状態保存用（番人なし）
 var ary_clues = []			#	手がかり数字配列（番人あり）、番人部分は 0
 var ary_state = []			#	状態配列（番人あり）、番人部分は CROSS
 
@@ -199,6 +200,7 @@ func _ready():
 		ary_clues[i] = 0
 		ary_state[i] = CROSS
 	clueLabels.resize(g.N_IMG_CELL_HORZ*g.N_IMG_CELL_VERT)
+	saved_state.resize(g.N_IMG_CELL_HORZ*g.N_IMG_CELL_VERT)
 	for y in range(g.N_IMG_CELL_VERT):
 		var py = y * g.CELL_WIDTH
 		for x in range(g.N_IMG_CELL_HORZ):
@@ -504,7 +506,8 @@ func _on_EditPictButton_pressed():
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
 			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.gray)
-			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
+			$BoardBG/TileMap.set_cell(x, y, ary_state[g.xyToAryIX(x, y)])
+			#$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	pass # Replace with function body.
 
 
