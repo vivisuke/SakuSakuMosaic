@@ -411,6 +411,7 @@ func cell_long_pressed():
 	for h in range(-2, 3):
 		for v in range(-2, 3):
 			update_cluesLabelColor(x+h, y+v)
+	update_MiniMap()
 	pass
 func _on_ClearButton_pressed():
 	solving = false
