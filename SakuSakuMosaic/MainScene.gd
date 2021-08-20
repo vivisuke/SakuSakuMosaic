@@ -477,47 +477,10 @@ func _on_BasicButton_pressed():
 	$MessLabel.text = "Difficulty = %d" % diffi
 	quest_genarated = true
 	return
-"""	if !solving:
-		solving = true
-		remove_clues_randomly()
-		$MessLabel.text = "Solving..."
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
-				var ix = g.xyToAryIX(x, y)
-				ary_state[ix] = UNKNOWN
-	elif solved:
-		solving = false
-		solved = false
-		$MessLabel.text = ""
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				if $BoardBG/TileMap.get_cell(x, y) == CROSS:
-					$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
-		return
-	else:
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				fill_black(g.xyToAryIX(x, y))
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				fill_cross(g.xyToAryIX(x, y))
-	var un_cnt = 0		# UNKNOWN 数
-	for y in range(g.N_IMG_CELL_VERT):
-		for x in range(g.N_IMG_CELL_HORZ):
-			var ix = g.xyToAryIX(x, y)
-			$BoardBG/TileMap.set_cell(x, y, ary_state[ix])
-			if ary_state[ix] == UNKNOWN:
-				un_cnt += 1
-	if un_cnt == 0:
-		solved = true
-		$MessLabel.text = "Solved."
-	pass # Replace with function body.
-"""
 
 func update_ModeButtons():
 	$ModeContainer/SolveButton/Underline.visible = !editMode
-	$ModeContainer/GenQuestButton/Underline.visible = editMode
+	$ModeContainer/EditPictButton/Underline.visible = editMode
 
 func _on_SolveButton_pressed():
 	if !editMode:
@@ -529,7 +492,7 @@ func _on_SolveButton_pressed():
 			ary_state[g.xyToAryIX(x, y)] = $BoardBG/TileMap.get_cell(x, y)	# 現状態を保存
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 			#var label = clueLabels[g.xyToBoardIX(x, y)]
-			#label.add_color_override("font_color", Color.black)
+			#label.add_color_override("font_color", Color.gray)
 	update_allCluesLabel()
 	pass # Replace with function body.
 
@@ -538,6 +501,10 @@ func _on_EditPictButton_pressed():
 		return
 	editMode = true
 	update_ModeButtons()
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			clueLabels[g.xyToBoardIX(x, y)].add_color_override("font_color", Color.gray)
+			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
 	pass # Replace with function body.
 
 
