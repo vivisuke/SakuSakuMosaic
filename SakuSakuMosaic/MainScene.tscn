@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -16,6 +16,18 @@
 [ext_resource path="res://sounds/button-3.mp3" type="AudioStream" id=14]
 [ext_resource path="res://images/lightbulb_black.png" type="Texture" id=15]
 [ext_resource path="res://images/lightbulb_white.png" type="Texture" id=16]
+[ext_resource path="res://images/shift_left_gray.png" type="Texture" id=17]
+[ext_resource path="res://images/shift_left_white.png" type="Texture" id=18]
+[ext_resource path="res://images/shift_left_black.png" type="Texture" id=19]
+[ext_resource path="res://images/shift_down_white.png" type="Texture" id=20]
+[ext_resource path="res://images/shift_down_gray.png" type="Texture" id=21]
+[ext_resource path="res://images/shift_down_black.png" type="Texture" id=22]
+[ext_resource path="res://images/shift_up_black.png" type="Texture" id=23]
+[ext_resource path="res://images/shift_up_white.png" type="Texture" id=24]
+[ext_resource path="res://images/shift_up_gray.png" type="Texture" id=25]
+[ext_resource path="res://images/shift_right_gray.png" type="Texture" id=26]
+[ext_resource path="res://images/shift_right_black.png" type="Texture" id=27]
+[ext_resource path="res://images/shift_right_white.png" type="Texture" id=28]
 
 [sub_resource type="TileSet" id=1]
 0/name = "black-4x4.png 0"
@@ -218,8 +230,60 @@ __meta__ = {
 [node name="PressedAudio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 14 )
 
+[node name="LeftButton" type="TextureButton" parent="."]
+margin_left = 97.0
+margin_top = 739.687
+margin_right = 137.0
+margin_bottom = 779.687
+texture_normal = ExtResource( 19 )
+texture_pressed = ExtResource( 18 )
+texture_disabled = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownButton" type="TextureButton" parent="."]
+margin_left = 160.028
+margin_top = 739.687
+margin_right = 208.028
+margin_bottom = 787.687
+texture_normal = ExtResource( 22 )
+texture_pressed = ExtResource( 20 )
+texture_disabled = ExtResource( 21 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UpButton" type="TextureButton" parent="."]
+margin_left = 229.002
+margin_top = 739.687
+margin_right = 277.002
+margin_bottom = 787.687
+texture_normal = ExtResource( 23 )
+texture_pressed = ExtResource( 24 )
+texture_disabled = ExtResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightButton" type="TextureButton" parent="."]
+margin_left = 294.84
+margin_top = 739.687
+margin_right = 342.84
+margin_bottom = 787.687
+texture_normal = ExtResource( 27 )
+texture_pressed = ExtResource( 28 )
+texture_disabled = ExtResource( 26 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="ModeContainer/SolveButton" to="." method="_on_SolveButton_pressed"]
 [connection signal="pressed" from="ModeContainer/EditPictButton" to="." method="_on_EditPictButton_pressed"]
 [connection signal="pressed" from="ClearButton" to="." method="_on_ClearButton_pressed"]
 [connection signal="pressed" from="BasicButton" to="." method="_on_BasicButton_pressed"]
 [connection signal="pressed" from="TestButton" to="." method="_on_TestButton_pressed"]
+[connection signal="pressed" from="LeftButton" to="." method="_on_LeftButton_pressed"]
+[connection signal="pressed" from="DownButton" to="." method="_on_DownButton_pressed"]
+[connection signal="pressed" from="UpButton" to="." method="_on_UpButton_pressed"]
+[connection signal="pressed" from="RightButton" to="." method="_on_RightButton_pressed"]

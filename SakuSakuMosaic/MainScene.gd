@@ -517,3 +517,61 @@ func _on_TestButton_pressed():
 	set_quest(g.quest_list[0][g.KEY_CLUES])
 	update_allCluesLabel()
 	pass # Replace with function body.
+
+
+func rotate_left_basic():
+	var ar = []
+	for y in range(g.N_IMG_CELL_VERT):
+		ar.push_back($BoardBG/TileMap.get_cell(0, y))	# may be -1 or +1
+	for x in range(g.N_IMG_CELL_HORZ-1):
+		for y in range(g.N_IMG_CELL_VERT):
+			$BoardBG/TileMap.set_cell(x, y, $BoardBG/TileMap.get_cell(x+1, y))
+	for y in range(g.N_IMG_CELL_VERT):
+		$BoardBG/TileMap.set_cell(g.N_IMG_CELL_HORZ-1, y, ar[y])
+	update_cluesLabel()
+	update_MiniMap()
+func _on_LeftButton_pressed():
+	rotate_left_basic()
+	pass # Replace with function body.
+func rotate_down_basic():
+	var ar = []
+	for x in range(g.N_IMG_CELL_HORZ):
+		ar.push_back($BoardBG/TileMap.get_cell(x, g.N_IMG_CELL_VERT-1))	# may be -1 or +1
+	for y in range(g.N_IMG_CELL_VERT-1, 0, -1):
+		for x in range(g.N_IMG_CELL_HORZ):
+			$BoardBG/TileMap.set_cell(x, y, $BoardBG/TileMap.get_cell(x, y-1))
+	for x in range(g.N_IMG_CELL_HORZ):
+		$BoardBG/TileMap.set_cell(x, 0, ar[x])
+	update_cluesLabel()
+	update_MiniMap()
+func _on_DownButton_pressed():
+	rotate_down_basic()
+	pass # Replace with function body.
+func rotate_up_basic():
+	var ar = []
+	for x in range(g.N_IMG_CELL_HORZ):
+		ar.push_back($BoardBG/TileMap.get_cell(x, 0))	# may be -1 or +1
+	for y in range(g.N_IMG_CELL_VERT-1):
+		for x in range(g.N_IMG_CELL_HORZ):
+			$BoardBG/TileMap.set_cell(x, y, $BoardBG/TileMap.get_cell(x, y+1))
+	for x in range(g.N_IMG_CELL_HORZ):
+		$BoardBG/TileMap.set_cell(x, g.N_IMG_CELL_VERT-1, ar[x])
+	update_cluesLabel()
+	update_MiniMap()
+func _on_UpButton_pressed():
+	rotate_up_basic()
+	pass # Replace with function body.
+func rotate_right_basic():
+	var ar = []
+	for y in range(g.N_IMG_CELL_VERT):
+		ar.push_back($BoardBG/TileMap.get_cell(g.N_IMG_CELL_HORZ-1, y))	# may be -1 or +1
+	for x in range(g.N_IMG_CELL_HORZ-1, 0, -1):
+		for y in range(g.N_IMG_CELL_VERT):
+			$BoardBG/TileMap.set_cell(x, y, $BoardBG/TileMap.get_cell(x-1, y))
+	for y in range(g.N_IMG_CELL_VERT):
+		$BoardBG/TileMap.set_cell(0, y, ar[y])
+	update_cluesLabel()
+	update_MiniMap()
+func _on_RightButton_pressed():
+	rotate_right_basic()
+	pass # Replace with function body.
