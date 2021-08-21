@@ -1,0 +1,11 @@
+[gd_scene format=2]
+
+[node name="LevelScene" type="Node2D"]
+
+[node name="BG" type="ColorRect" parent="."]
+margin_right = 500.0
+margin_bottom = 800.0
+color = Color( 0.501961, 0.752941, 0.501961, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
