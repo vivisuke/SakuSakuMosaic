@@ -50,7 +50,8 @@ var NumLabel = load("res://NumLabel.tscn")
 func _ready():
 	#print(bd.ary_clues.size())
 	rng.randomize()
-	editMode = true
+	editMode = !g.solveMode
+	qix = g.qNumber - 1
 	ary_clues.resize(g.ARY_SIZE)
 	ary_state.resize(g.ARY_SIZE)
 	for i in range(g.ARY_SIZE):
@@ -73,6 +74,8 @@ func _ready():
 			#nl.text = String(x % 10)
 			$BoardBG.add_child(nl)
 			clueLabels[g.xyToBoardIX(x, y)] = nl
+	if !editMode:
+		set_quest(g.quest_list[qix][g.KEY_CLUES])
 	update_MiniMap()
 	update_ModeButtons()
 	pass # Replace with function body.
