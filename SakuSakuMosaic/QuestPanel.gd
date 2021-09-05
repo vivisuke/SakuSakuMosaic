@@ -2,7 +2,7 @@ extends ReferenceRect
 
 const RADIUS = 10
 const POSITION = Vector2(2, 2)
-const SIZE = Vector2(580-10, 90)
+const SIZE = Vector2(480-10, 90)
 const IMG_WIDTH = 20		# for 20x20
 const IMG_HEIGHT = 20		# for 20x20
 const TNCELLWD = 3
