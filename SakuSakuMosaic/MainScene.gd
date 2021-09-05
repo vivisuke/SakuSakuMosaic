@@ -4,170 +4,27 @@ const BLACK = 0
 const CROSS = 1
 const UNKNOWN = -1
 
-class Board:
-	var g
-	var ary_clues = []			#	手がかり数字配列（番人あり）、番人部分は 0
-	var ary_state = []			#	状態配列（番人あり）、番人部分は CROSS
-	var ix_ary = []				#	手がかり数字を消す位置配列
-	
-	func _init():
-		g = Global
-		ary_clues.resize(g.ARY_SIZE)
-		ary_state.resize(g.ARY_SIZE)
-		for i in range(g.ARY_SIZE):
-			ary_clues[i] = 0
-			ary_state[i] = CROSS
-		ix_ary.resize(g.N_IMG_CELL_VERT*g.N_IMG_CELL_HORZ)
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				ix_ary[g.xyToBoardIX(x, y)] = g.xyToAryIX(x, y)
-	#func xyToAryIX(x, y):		# undone: Global に移動？
-	#	return (y+1)*g.ARY_WIDTH + (x+1)
-	func setup(clueLabels):
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				var ix = g.xyToAryIX(x, y)
-				ary_state[ix] = UNKNOWN
-				var label = clueLabels[g.xyToBoardIX(x, y)]
-				ary_clues[ix] = int(label.text)
-				#ary_clues[ix] = -1 if label.text == "" else int(label.text)
-	func print_clues():
-		for y in range(g.N_IMG_CELL_VERT):
-			var txt = ""
-			for x in range(g.N_IMG_CELL_HORZ):
-				var ix = g.xyToAryIX(x, y)
-				if ary_clues[ix] < 0:
-					txt += "."
-				else:
-					txt += String(ary_clues[ix])
-			print(txt)
-	func count_ary_unknown():
-		var un_cnt = 0		# UNKNOWN 数
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				var ix = g.xyToAryIX(x, y)
-				if ary_state[ix] == UNKNOWN:
-					un_cnt += 1
-		return un_cnt
-	func count_ary_black(ix):		#	ix を中心とする 3x3 ブロック内の 黒 数を数える
-		var cnt = 0
-		if( ary_state[ix-g.ARY_WIDTH-1] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix-g.ARY_WIDTH] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix-g.ARY_WIDTH+1] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix-1] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix+1] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix+g.ARY_WIDTH-1] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix+g.ARY_WIDTH] == BLACK ):
-			cnt += 1;
-		if( ary_state[ix+g.ARY_WIDTH+1] == BLACK ):
-			cnt += 1;
-		return cnt
-	func count_ary_cross(ix):		#	ix を中心とする 3x3 ブロック内の バツ 数を数える
-		var cnt = 0
-		if( ary_state[ix-g.ARY_WIDTH-1] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix-g.ARY_WIDTH] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix-g.ARY_WIDTH+1] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix-1] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix+1] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix+g.ARY_WIDTH-1] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix+g.ARY_WIDTH] == CROSS ):
-			cnt += 1;
-		if( ary_state[ix+g.ARY_WIDTH+1] == CROSS ):
-			cnt += 1;
-		return cnt
-	func fill_black(ix):	# 手がかり数字＋周りのバツ数が９ならばバツ以外の場所を黒にする
-		var cnt = count_ary_cross(ix)
-		if ary_clues[ix] >= 0 && ary_clues[ix] + cnt == 9:
-			if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN:
-				ary_state[ix-g.ARY_WIDTH-1] = BLACK
-			if ary_state[ix-g.ARY_WIDTH] == UNKNOWN:
-				ary_state[ix-g.ARY_WIDTH] = BLACK
-			if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN:
-				ary_state[ix-g.ARY_WIDTH+1] = BLACK
-			if ary_state[ix-1] == UNKNOWN:
-				ary_state[ix-1] = BLACK
-			if ary_state[ix] == UNKNOWN:
-				ary_state[ix] = BLACK
-			if ary_state[ix+1] == UNKNOWN:
-				ary_state[ix+1] = BLACK
-			if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN:
-				ary_state[ix+g.ARY_WIDTH-1] = BLACK
-			if ary_state[ix+g.ARY_WIDTH] == UNKNOWN:
-				ary_state[ix+g.ARY_WIDTH] = BLACK
-			if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN:
-				ary_state[ix+g.ARY_WIDTH+1] = BLACK
-	func fill_cross(ix):	# 手がかり数字 == 周りの黒数 ならば UNKNOWN の場所をバツにする
-		var cnt = count_ary_black(ix)
-		if ary_clues[ix] >= 0 && ary_clues[ix] == cnt:
-			if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN:
-				ary_state[ix-g.ARY_WIDTH-1] = CROSS
-			if ary_state[ix-g.ARY_WIDTH] == UNKNOWN:
-				ary_state[ix-g.ARY_WIDTH] = CROSS
-			if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN:
-				ary_state[ix-g.ARY_WIDTH+1] = CROSS
-			if ary_state[ix-1] == UNKNOWN:
-				ary_state[ix-1] = CROSS
-			if ary_state[ix] == UNKNOWN:
-				ary_state[ix] = CROSS
-			if ary_state[ix+1] == UNKNOWN:
-				ary_state[ix+1] = CROSS
-			if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN:
-				ary_state[ix+g.ARY_WIDTH-1] = CROSS
-			if ary_state[ix+g.ARY_WIDTH] == UNKNOWN:
-				ary_state[ix+g.ARY_WIDTH] = CROSS
-			if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN:
-				ary_state[ix+g.ARY_WIDTH+1] = CROSS
-	func solve():
-		for y in range(g.N_IMG_CELL_VERT):
-			for x in range(g.N_IMG_CELL_HORZ):
-				ary_state[g.xyToAryIX(x, y)] = UNKNOWN
-		var uc0 = 0
-		var loop = 0
-		while true:
-			for y in range(g.N_IMG_CELL_VERT):
-				for x in range(g.N_IMG_CELL_HORZ):
-					fill_black(g.xyToAryIX(x, y))
-			for y in range(g.N_IMG_CELL_VERT):
-				for x in range(g.N_IMG_CELL_HORZ):
-					fill_cross(g.xyToAryIX(x, y))
-			var uc = count_ary_unknown()
-			if uc == 0:
-				return loop		# ループ回数を返す
-			if uc == uc0:
-				return -1
-			uc0 = uc
-			loop += 1
-	func gen_quest(clueLabels):
-		setup(clueLabels)
-		ix_ary.shuffle();
-		#var txt = ""
-		#for i in range(ix_ary.size()):
-		#	txt += String(ix_ary[i]) + " "
-		#print(ix_ary)
-		for i in range(ix_ary.size()):
-			var ix = ix_ary[i]
-			var t = ary_clues[ix]
-			ary_clues[ix] = -1
-			if solve() < 0:
-				ary_clues[ix] = t
+const TILE_NONE = -1
+const TILE_CROSS = 0		# ☓
+const TILE_BLACK = 1
+const TILE_BG_YELLOW = 0
+const TILE_BG_GRAY = 1
 
-### End of class Board
+enum { MODE_SOLVE, MODE_EDIT_PICT, MODE_EDIT_CLUES, }
+enum { SET_CELL, SET_CELL_BE, CLEAR_ALL, ROT_LEFT, ROT_RIGHT, ROT_UP, ROT_DOWN}
+
+var qix					# 問題番号 [0, N]
+var qID					# 問題ID
+var qSolved = false		# 現問題をクリア済みか？
+var qSolvedStat = false		# 現問題をクリア状態か？
+var elapsedTime = 0.0	# 経過時間（単位：秒）
+var hintTime = 0.0		# != 0 の間はヒント使用不可（単位：秒）
+var mode = MODE_EDIT_PICT;
+var dialog_opened = false;
+var mouse_pushed = false
+var last_xy = Vector2()
+var pushed_xy = Vector2()
+var cell_val = 0
 
 var editMode = true			# 問題作成モード
 var pressed = false;		# true for マウス押下時
@@ -219,6 +76,16 @@ func _ready():
 	update_MiniMap()
 	update_ModeButtons()
 	pass # Replace with function body.
+func saveSolvedPat():
+	var file = File.new()
+	file.open(g.solvedPatFileName, File.WRITE)
+	file.store_var(g.solvedPat)
+	file.close()
+func saveSettings():
+	var file = File.new()
+	file.open(g.settingsFileName, File.WRITE)
+	file.store_var(g.settings)
+	file.close()
 func set_quest(quest : String):
 	if editMode: return
 	var x = 0
@@ -235,6 +102,26 @@ func set_quest(quest : String):
 			x = 0
 			y += 1
 	pass
+func get_h_data(y0):
+	var data = 0
+	for x in range(g.N_IMG_CELL_HORZ):
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x, y0) == TILE_BLACK else 0)
+	return data
+func get_h_data0(y0):
+	var data = 0
+	for x in range(g.N_IMG_CELL_HORZ):
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x, y0) == TILE_CROSS else 0)
+	return data
+func get_v_data(x0):
+	var data = 0
+	for y in range(g.N_IMG_CELL_VERT):
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x0, y) == TILE_BLACK else 0)
+	return data
+func get_v_data0(x0):
+	var data = 0
+	for y in range(g.N_IMG_CELL_VERT):
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x0, y) == TILE_CROSS else 0)
+	return data
 #func xyToAryIX(x, y):
 #	return (y+1)*g.ARY_WIDTH + (x+1)
 func count_black(x, y):		# (x, y) を中心とする 3x3 ブロック内の黒数をカウント
@@ -575,3 +462,183 @@ func rotate_right_basic():
 func _on_RightButton_pressed():
 	rotate_right_basic()
 	pass # Replace with function body.
+
+
+func _on_BackButton_pressed():
+	if !qSolved && !qSolvedStat:
+		var lst = []
+		for y in range(g.N_IMG_CELL_VERT):
+			lst.push_back(get_h_data(y))
+		lst.push_back(-int(elapsedTime))
+		for y in range(g.N_IMG_CELL_VERT):
+			lst.push_back(get_h_data0(y))
+		g.solvedPat[qID] = lst
+		saveSolvedPat()
+	get_tree().change_scene("res://LevelScene.tscn")
+	pass # Replace with function body.
+
+### class Board
+class Board:
+	var g
+	var ary_clues = []			#	手がかり数字配列（番人あり）、番人部分は 0
+	var ary_state = []			#	状態配列（番人あり）、番人部分は CROSS
+	var ix_ary = []				#	手がかり数字を消す位置配列
+	
+	func _init():
+		g = Global
+		ary_clues.resize(g.ARY_SIZE)
+		ary_state.resize(g.ARY_SIZE)
+		for i in range(g.ARY_SIZE):
+			ary_clues[i] = 0
+			ary_state[i] = CROSS
+		ix_ary.resize(g.N_IMG_CELL_VERT*g.N_IMG_CELL_HORZ)
+		for y in range(g.N_IMG_CELL_VERT):
+			for x in range(g.N_IMG_CELL_HORZ):
+				ix_ary[g.xyToBoardIX(x, y)] = g.xyToAryIX(x, y)
+	#func xyToAryIX(x, y):		# undone: Global に移動？
+	#	return (y+1)*g.ARY_WIDTH + (x+1)
+	func setup(clueLabels):
+		for y in range(g.N_IMG_CELL_VERT):
+			for x in range(g.N_IMG_CELL_HORZ):
+				var ix = g.xyToAryIX(x, y)
+				ary_state[ix] = UNKNOWN
+				var label = clueLabels[g.xyToBoardIX(x, y)]
+				ary_clues[ix] = int(label.text)
+				#ary_clues[ix] = -1 if label.text == "" else int(label.text)
+	func print_clues():
+		for y in range(g.N_IMG_CELL_VERT):
+			var txt = ""
+			for x in range(g.N_IMG_CELL_HORZ):
+				var ix = g.xyToAryIX(x, y)
+				if ary_clues[ix] < 0:
+					txt += "."
+				else:
+					txt += String(ary_clues[ix])
+			print(txt)
+	func count_ary_unknown():
+		var un_cnt = 0		# UNKNOWN 数
+		for y in range(g.N_IMG_CELL_VERT):
+			for x in range(g.N_IMG_CELL_HORZ):
+				var ix = g.xyToAryIX(x, y)
+				if ary_state[ix] == UNKNOWN:
+					un_cnt += 1
+		return un_cnt
+	func count_ary_black(ix):		#	ix を中心とする 3x3 ブロック内の 黒 数を数える
+		var cnt = 0
+		if( ary_state[ix-g.ARY_WIDTH-1] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix-g.ARY_WIDTH] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix-g.ARY_WIDTH+1] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix-1] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix+1] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix+g.ARY_WIDTH-1] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix+g.ARY_WIDTH] == BLACK ):
+			cnt += 1;
+		if( ary_state[ix+g.ARY_WIDTH+1] == BLACK ):
+			cnt += 1;
+		return cnt
+	func count_ary_cross(ix):		#	ix を中心とする 3x3 ブロック内の バツ 数を数える
+		var cnt = 0
+		if( ary_state[ix-g.ARY_WIDTH-1] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix-g.ARY_WIDTH] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix-g.ARY_WIDTH+1] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix-1] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix+1] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix+g.ARY_WIDTH-1] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix+g.ARY_WIDTH] == CROSS ):
+			cnt += 1;
+		if( ary_state[ix+g.ARY_WIDTH+1] == CROSS ):
+			cnt += 1;
+		return cnt
+	func fill_black(ix):	# 手がかり数字＋周りのバツ数が９ならばバツ以外の場所を黒にする
+		var cnt = count_ary_cross(ix)
+		if ary_clues[ix] >= 0 && ary_clues[ix] + cnt == 9:
+			if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN:
+				ary_state[ix-g.ARY_WIDTH-1] = BLACK
+			if ary_state[ix-g.ARY_WIDTH] == UNKNOWN:
+				ary_state[ix-g.ARY_WIDTH] = BLACK
+			if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN:
+				ary_state[ix-g.ARY_WIDTH+1] = BLACK
+			if ary_state[ix-1] == UNKNOWN:
+				ary_state[ix-1] = BLACK
+			if ary_state[ix] == UNKNOWN:
+				ary_state[ix] = BLACK
+			if ary_state[ix+1] == UNKNOWN:
+				ary_state[ix+1] = BLACK
+			if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN:
+				ary_state[ix+g.ARY_WIDTH-1] = BLACK
+			if ary_state[ix+g.ARY_WIDTH] == UNKNOWN:
+				ary_state[ix+g.ARY_WIDTH] = BLACK
+			if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN:
+				ary_state[ix+g.ARY_WIDTH+1] = BLACK
+	func fill_cross(ix):	# 手がかり数字 == 周りの黒数 ならば UNKNOWN の場所をバツにする
+		var cnt = count_ary_black(ix)
+		if ary_clues[ix] >= 0 && ary_clues[ix] == cnt:
+			if ary_state[ix-g.ARY_WIDTH-1] == UNKNOWN:
+				ary_state[ix-g.ARY_WIDTH-1] = CROSS
+			if ary_state[ix-g.ARY_WIDTH] == UNKNOWN:
+				ary_state[ix-g.ARY_WIDTH] = CROSS
+			if ary_state[ix-g.ARY_WIDTH+1] == UNKNOWN:
+				ary_state[ix-g.ARY_WIDTH+1] = CROSS
+			if ary_state[ix-1] == UNKNOWN:
+				ary_state[ix-1] = CROSS
+			if ary_state[ix] == UNKNOWN:
+				ary_state[ix] = CROSS
+			if ary_state[ix+1] == UNKNOWN:
+				ary_state[ix+1] = CROSS
+			if ary_state[ix+g.ARY_WIDTH-1] == UNKNOWN:
+				ary_state[ix+g.ARY_WIDTH-1] = CROSS
+			if ary_state[ix+g.ARY_WIDTH] == UNKNOWN:
+				ary_state[ix+g.ARY_WIDTH] = CROSS
+			if ary_state[ix+g.ARY_WIDTH+1] == UNKNOWN:
+				ary_state[ix+g.ARY_WIDTH+1] = CROSS
+	func solve():
+		for y in range(g.N_IMG_CELL_VERT):
+			for x in range(g.N_IMG_CELL_HORZ):
+				ary_state[g.xyToAryIX(x, y)] = UNKNOWN
+		var uc0 = 0
+		var loop = 0
+		while true:
+			for y in range(g.N_IMG_CELL_VERT):
+				for x in range(g.N_IMG_CELL_HORZ):
+					fill_black(g.xyToAryIX(x, y))
+			for y in range(g.N_IMG_CELL_VERT):
+				for x in range(g.N_IMG_CELL_HORZ):
+					fill_cross(g.xyToAryIX(x, y))
+			var uc = count_ary_unknown()
+			if uc == 0:
+				return loop		# ループ回数を返す
+			if uc == uc0:
+				return -1
+			uc0 = uc
+			loop += 1
+	func gen_quest(clueLabels):
+		setup(clueLabels)
+		ix_ary.shuffle();
+		#var txt = ""
+		#for i in range(ix_ary.size()):
+		#	txt += String(ix_ary[i]) + " "
+		#print(ix_ary)
+		for i in range(ix_ary.size()):
+			var ix = ix_ary[i]
+			var t = ary_clues[ix]
+			ary_clues[ix] = -1
+			if solve() < 0:
+				ary_clues[ix] = t
+
+### End of class Board

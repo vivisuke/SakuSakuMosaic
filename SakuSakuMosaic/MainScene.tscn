@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -28,6 +28,8 @@
 [ext_resource path="res://images/shift_right_gray.png" type="Texture" id=26]
 [ext_resource path="res://images/shift_right_black.png" type="Texture" id=27]
 [ext_resource path="res://images/shift_right_white.png" type="Texture" id=28]
+[ext_resource path="res://images/leftward_white.png" type="Texture" id=29]
+[ext_resource path="res://images/leftward_black.png" type="Texture" id=30]
 
 [sub_resource type="TileSet" id=1]
 0/name = "black-4x4.png 0"
@@ -98,6 +100,16 @@ margin_right = 500.0
 margin_bottom = 50.0
 color = Color( 0.180392, 0.309804, 0.309804, 1 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="TextureButton" parent="TitleBar"]
+margin_left = 2.0
+margin_right = 50.0
+margin_bottom = 48.0
+texture_normal = ExtResource( 29 )
+texture_pressed = ExtResource( 30 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -278,6 +290,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="pressed" from="TitleBar/BackButton" to="." method="_on_BackButton_pressed"]
 [connection signal="pressed" from="ModeContainer/SolveButton" to="." method="_on_SolveButton_pressed"]
 [connection signal="pressed" from="ModeContainer/EditPictButton" to="." method="_on_EditPictButton_pressed"]
 [connection signal="pressed" from="ClearButton" to="." method="_on_ClearButton_pressed"]
