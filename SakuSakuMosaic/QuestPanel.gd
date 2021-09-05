@@ -1,5 +1,7 @@
 extends ReferenceRect
 
+signal pressed(num)
+
 const RADIUS = 10
 const POSITION = Vector2(2, 2)
 const SIZE = Vector2(480-10, 90)
