@@ -75,8 +75,12 @@ func _ready():
 			$BoardBG.add_child(nl)
 			clueLabels[g.xyToBoardIX(x, y)] = nl
 	if !editMode:		# 「問題を解く」
+		$TitleBar/QuestLabel.text = (("#%d" % g.qNumber) + (", 難易度%d" % g.quest_list[qix][g.KEY_DIFFICULTY]) +
+						", '" + g.quest_list[qix][g.KEY_TITLE][0] + "???' by " +
+						g.quest_list[qix][g.KEY_AUTHOR])
 		set_quest(g.quest_list[qix][g.KEY_CLUES])
 		update_allCluesLabel()
+		$ModeContainer/EditPictButton.disabled = true
 	update_shift_buttons()
 	update_MiniMap()
 	update_ModeButtons()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -30,6 +30,10 @@
 [ext_resource path="res://images/shift_right_white.png" type="Texture" id=28]
 [ext_resource path="res://images/leftward_white.png" type="Texture" id=29]
 [ext_resource path="res://images/leftward_black.png" type="Texture" id=30]
+
+[sub_resource type="DynamicFont" id=5]
+size = 18
+font_data = ExtResource( 11 )
 
 [sub_resource type="TileSet" id=1]
 0/name = "black-4x4.png 0"
@@ -110,6 +114,18 @@ margin_right = 50.0
 margin_bottom = 48.0
 texture_normal = ExtResource( 29 )
 texture_pressed = ExtResource( 30 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuestLabel" type="Label" parent="TitleBar"]
+margin_left = 69.0
+margin_top = 15.0
+margin_right = 479.0
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 5 )
+text = "#1 難易度 1 '???' by vivisuke"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
