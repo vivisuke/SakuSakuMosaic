@@ -74,8 +74,9 @@ func _ready():
 			#nl.text = String(x % 10)
 			$BoardBG.add_child(nl)
 			clueLabels[g.xyToBoardIX(x, y)] = nl
-	if !editMode:
+	if !editMode:		# 「問題を解く」
 		set_quest(g.quest_list[qix][g.KEY_CLUES])
+		update_allCluesLabel()
 	update_MiniMap()
 	update_ModeButtons()
 	pass # Replace with function body.
