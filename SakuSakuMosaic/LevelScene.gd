@@ -101,3 +101,9 @@ func _on_QuestPanel_pressed(num):
 	g.qNumber = num
 	#g.qix = qNum2QIX[num-1]
 	get_tree().change_scene("res://MainScene.tscn")
+
+
+func _on_EditPictButton_pressed():
+	g.solveMode = false;
+	get_tree().change_scene("res://MainScene.tscn")
+	pass # Replace with function body.
