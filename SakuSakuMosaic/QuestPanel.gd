@@ -48,6 +48,26 @@ func set_clearTime(n : int):
 		var s = n % 60
 		$ClearTime.text = "Time: %02d:%02d:%02d" % [h, m, s]
 	update()
+func _input(event):
+	if event is InputEventMouseButton:
+		#print("InputEventMouseButton")
+		if event.is_action_pressed("click"):		# left mouse button
+			if get_global_rect().has_point(event.position):		# 
+				mouse_pushed = true;
+				saved_pos = get_global_rect()
+				update()
+		elif event.is_action_released("click") && mouse_pushed:
+			if get_global_rect() == saved_pos:
+				if get_global_rect().has_point(event.position):		# 
+					print("pressed: ", $Number.text)
+					emit_signal("pressed", number)
+			mouse_pushed = false;
+			update()
+	elif event is InputEventMouseMotion && mouse_pushed:	# mouse Moved
+		if get_global_rect() != saved_pos || !get_global_rect().has_point(event.position):	# 
+			mouse_pushed = false;
+			update()
+	print("mouse_pushed = ", mouse_pushed)
 func _draw():
 	# 外枠
 	var style_box = StyleBoxFlat.new()

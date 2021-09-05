@@ -17,9 +17,9 @@ __meta__ = {
 }
 
 [node name="Star" type="Label" parent="."]
-margin_left = 8.0
+margin_left = 11.0
 margin_top = 10.0
-margin_right = 62.0
+margin_right = 65.0
 margin_bottom = 29.0
 custom_fonts/font = SubResource( 1 )
 text = "★★★"
@@ -28,21 +28,22 @@ __meta__ = {
 }
 
 [node name="Number" type="Label" parent="."]
-margin_left = 8.0
+margin_left = 18.0
 margin_top = 38.0
-margin_right = 48.0
-margin_bottom = 52.0
+margin_right = 58.0
+margin_bottom = 57.0
 custom_fonts/font = SubResource( 1 )
 text = "#1"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Difficulty" type="Label" parent="."]
 margin_left = 150.705
-margin_top = 10.0
-margin_right = 190.705
-margin_bottom = 29.0
+margin_top = 12.0
+margin_right = 221.705
+margin_bottom = 31.0
 custom_fonts/font = SubResource( 1 )
 text = "難易度 1"
 __meta__ = {
@@ -51,9 +52,9 @@ __meta__ = {
 
 [node name="Title" type="Label" parent="."]
 margin_left = 150.705
-margin_top = 38.0
+margin_top = 37.0
 margin_right = 221.705
-margin_bottom = 57.0
+margin_bottom = 56.0
 custom_fonts/font = SubResource( 1 )
 text = "難易度 1"
 __meta__ = {
@@ -62,9 +63,9 @@ __meta__ = {
 
 [node name="Author" type="Label" parent="."]
 margin_left = 150.705
-margin_top = 68.9194
+margin_top = 62.9194
 margin_right = 221.705
-margin_bottom = 87.9194
+margin_bottom = 81.9194
 custom_fonts/font = SubResource( 1 )
 text = "難易度 1"
 __meta__ = {
@@ -73,9 +74,9 @@ __meta__ = {
 
 [node name="ClearTime" type="Label" parent="."]
 margin_left = 349.303
-margin_top = 10.0
+margin_top = 12.0
 margin_right = 420.303
-margin_bottom = 29.0
+margin_bottom = 31.0
 custom_fonts/font = SubResource( 1 )
 text = "難易度 1"
 __meta__ = {
