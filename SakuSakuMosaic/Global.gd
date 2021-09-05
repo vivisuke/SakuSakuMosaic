@@ -13,6 +13,21 @@ const ARY_WIDTH = N_IMG_CELL_HORZ + 2
 const ARY_HEIGHT = N_IMG_CELL_VERT + 2
 const ARY_SIZE = ARY_WIDTH * ARY_HEIGHT
 
+const solvedPatFileName = "user://SSM15_saved.dat"
+const settingsFileName = "user://SSM15_stgs.dat"
+
+var lang_ja = false		# 日本語モード？
+var solvedPatLoaded = false
+var lvl_vscroll = 0		# レベルシーン スクロール位置
+var solveMode = true
+var qNumber = 0			# [#1, ...#N]
+var qNum2QIX = []		# qNum (#1 ... #N) → QIX テーブル
+var qix2ID = []			# qix → QID 配列
+var settings = {}		# 設定辞書
+var solvedPat = {}		# QID -> [data0, data1, ...] 辞書
+#var solved = []			# true/false
+var ans_images = []		# 解答ビットパターン配列
+
 enum {
 	KEY_ID = 0,
 	KEY_DIFFICULTY,
