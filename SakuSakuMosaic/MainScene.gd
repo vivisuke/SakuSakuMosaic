@@ -77,9 +77,15 @@ func _ready():
 	if !editMode:		# 「問題を解く」
 		set_quest(g.quest_list[qix][g.KEY_CLUES])
 		update_allCluesLabel()
+	update_shift_buttons()
 	update_MiniMap()
 	update_ModeButtons()
 	pass # Replace with function body.
+func update_shift_buttons():
+	$LeftButton.disabled = !editMode
+	$RightButton.disabled = !editMode
+	$UpButton.disabled = !editMode
+	$DownButton.disabled = !editMode
 func saveSolvedPat():
 	var file = File.new()
 	file.open(g.solvedPatFileName, File.WRITE)
