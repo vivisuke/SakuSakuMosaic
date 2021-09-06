@@ -12,11 +12,16 @@ var scroll_pos
 
 var QuestPanel = load("res://QuestPanel.tscn")
 
+class MyCustomSorter:
+	var g 
+	static func sort_ascending(a, b):
+		return true if a[1] < b[1] else false
 
 func _ready():
 	#
 	g.ans_images.resize(g.quest_list.size())
 	g.qix2ID.resize(g.quest_list.size())
+	g.quest_list.sort_custom(MyCustomSorter, "sort_ascending")	# 難易度をキーに昇順ソート
 	var score = 0
 	var nSolved = 0
 	for i in g.quest_list.size():	# 問題パネルセットアップ
