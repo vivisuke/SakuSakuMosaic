@@ -25,6 +25,7 @@ var mouse_pushed = false
 var last_xy = Vector2()
 var pushed_xy = Vector2()
 var cell_val = 0
+#var nError = 0			# 
 
 var editMode = true			# 問題作成モード
 var pressed = false;		# true for マウス押下時
@@ -32,7 +33,7 @@ var long_pressed = false	# 長押しされた
 var solving = false			# 
 var solved = false
 var quest_genarated = false
-var crnt_color = 3
+#var crnt_color = 3
 var pressed_ticks = 0		# 押下時タイム
 var pressed_xy = Vector2(-1, -1)
 var clueLabels = []			#	手がかり数字ラベル配列（番人なし）
@@ -49,6 +50,7 @@ var NumLabel = load("res://NumLabel.tscn")
 
 func _ready():
 	#print(bd.ary_clues.size())
+	$MessLabel.text = ""
 	rng.randomize()
 	editMode = !g.solveMode
 	qix = g.qNumber - 1
@@ -226,14 +228,24 @@ func _input(event):
 				cell_pressed(xy.x, xy.y)
 				$PressedAudio.play()
 			pressed = false
+			if is_solved():
+				$MessLabel.text = "Solved. Good Job !"
 		#elif event.doubleclick:
 		#	print("doubleclick")
+func is_solved():
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			if $BoardBG/TileMap.get_cell(x, y) == UNKNOWN: return false
+			var label = clueLabels[g.xyToBoardIX(x, y)]
+			if label.text != "":
+				if count_black(x, y) != int(label.text): return false
+	return true;
 func _process(delta):
 	if pressed && !long_pressed && !editMode:
 		if OS.get_ticks_msec() - pressed_ticks >= 500:		# 0.5秒経過
 			print("long_pressed")
 			long_pressed = true
-			cell_long_pressed()
+			cell_long_pressed(pressed_xy.x, pressed_xy.y)
 			$PressedAudio.play()
 func update_cluesLabelColor(x, y):
 	if x < 0 || x >= g.N_IMG_CELL_HORZ || y < 0 || y >= g.N_IMG_CELL_VERT:
@@ -287,9 +299,9 @@ func cell_pressed(x, y):
 func set_cell(x, y, v):
 	if x >= 0 && x < g.N_IMG_CELL_HORZ && y >= 0 && y < g.N_IMG_CELL_VERT:
 		$BoardBG/TileMap.set_cell(x, y, v)
-func cell_long_pressed():
-	var x = pressed_xy.x
-	var y = pressed_xy.y
+func cell_long_pressed(x, y):
+	#var x = pressed_xy.x
+	#var y = pressed_xy.y
 	var label = clueLabels[g.xyToBoardIX(x, y)]
 	if label.text == "": return
 	var cn = int(label.text)
@@ -656,3 +668,11 @@ class Board:
 				ary_clues[ix] = t
 
 ### End of class Board
+
+
+func _on_Auto0Button_pressed():
+	for y in range(g.N_IMG_CELL_VERT):
+		for x in range(g.N_IMG_CELL_HORZ):
+			if clueLabels[g.xyToBoardIX(x, y)].text == "0":
+				cell_long_pressed(x, y)
+	pass # Replace with function body.
