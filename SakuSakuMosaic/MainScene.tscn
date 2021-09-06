@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -83,6 +83,9 @@ font_data = ExtResource( 11 )
 1/shape_one_way_margin = 0.0
 1/shapes = [  ]
 1/z_index = 0
+
+[sub_resource type="DynamicFont" id=6]
+font_data = ExtResource( 11 )
 
 [sub_resource type="DynamicFont" id=4]
 size = 20
@@ -212,33 +215,69 @@ script = ExtResource( 3 )
 
 [node name="ClearButton" type="TextureButton" parent="."]
 margin_left = 20.6307
-margin_top = 671.92
+margin_top = 670.0
 margin_right = 68.6307
-margin_bottom = 719.92
+margin_bottom = 718.0
 texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label" type="Label" parent="ClearButton"]
+margin_top = 46.0
+margin_right = 48.0
+margin_bottom = 63.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "全消去"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="BasicButton" type="TextureButton" parent="."]
 margin_left = 318.811
-margin_top = 671.92
+margin_top = 670.0
 margin_right = 366.811
-margin_bottom = 719.92
+margin_bottom = 718.0
 texture_normal = ExtResource( 7 )
 texture_pressed = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label" type="Label" parent="BasicButton"]
+margin_top = 46.0
+margin_right = 48.0
+margin_bottom = 63.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "BASIC"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="TestButton" type="TextureButton" parent="."]
 margin_left = 436.542
-margin_top = 671.92
+margin_top = 670.0
 margin_right = 484.542
-margin_bottom = 719.92
+margin_bottom = 718.0
 texture_normal = ExtResource( 15 )
 texture_pressed = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="TestButton"]
+margin_top = 46.0
+margin_right = 48.0
+margin_bottom = 63.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Test"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -260,9 +299,10 @@ stream = ExtResource( 14 )
 
 [node name="LeftButton" type="TextureButton" parent="."]
 margin_left = 97.0
-margin_top = 739.687
-margin_right = 137.0
-margin_bottom = 779.687
+margin_top = 730.0
+margin_right = 145.0
+margin_bottom = 778.0
+rect_rotation = 0.175024
 texture_normal = ExtResource( 19 )
 texture_pressed = ExtResource( 18 )
 texture_disabled = ExtResource( 17 )
@@ -270,11 +310,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label" type="Label" parent="LeftButton"]
+margin_top = 46.0
+margin_right = 48.0
+margin_bottom = 63.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "左移動"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="DownButton" type="TextureButton" parent="."]
 margin_left = 160.028
-margin_top = 739.687
+margin_top = 730.0
 margin_right = 208.028
-margin_bottom = 787.687
+margin_bottom = 778.0
 texture_normal = ExtResource( 22 )
 texture_pressed = ExtResource( 20 )
 texture_disabled = ExtResource( 21 )
@@ -282,11 +334,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label" type="Label" parent="DownButton"]
+margin_top = 46.0
+margin_right = 48.0
+margin_bottom = 63.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "下移動"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="UpButton" type="TextureButton" parent="."]
 margin_left = 229.002
-margin_top = 739.687
+margin_top = 730.0
 margin_right = 277.002
-margin_bottom = 787.687
+margin_bottom = 778.0
 texture_normal = ExtResource( 23 )
 texture_pressed = ExtResource( 24 )
 texture_disabled = ExtResource( 25 )
@@ -294,14 +358,38 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label" type="Label" parent="UpButton"]
+margin_top = 48.0
+margin_right = 48.0
+margin_bottom = 65.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "上移動"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="RightButton" type="TextureButton" parent="."]
 margin_left = 294.84
-margin_top = 739.687
+margin_top = 730.0
 margin_right = 342.84
-margin_bottom = 787.687
+margin_bottom = 778.0
 texture_normal = ExtResource( 27 )
 texture_pressed = ExtResource( 28 )
 texture_disabled = ExtResource( 26 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="RightButton"]
+margin_top = 46.0
+margin_right = 48.0
+margin_bottom = 63.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "右移動"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
