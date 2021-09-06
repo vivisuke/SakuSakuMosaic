@@ -228,8 +228,13 @@ func _input(event):
 				cell_pressed(xy.x, xy.y)
 				$PressedAudio.play()
 			pressed = false
-			if is_solved():
-				$MessLabel.text = "Solved. Good Job !"
+			if is_solved():		# 問題クリア
+				qSolved = true	# クリア済みフラグ
+				if !qSolvedStat:		# クリア済みフラグOFFの場合
+					qSolvedStat = true
+				$MessLabel.text = "問題クリア。Good Job !"
+			else:
+				qSolvedStat = false
 		#elif event.doubleclick:
 		#	print("doubleclick")
 func is_solved():
@@ -241,6 +246,15 @@ func is_solved():
 				if count_black(x, y) != int(label.text): return false
 	return true;
 func _process(delta):
+	if !qSolvedStat:	# クリア済みでない場合
+		elapsedTime += delta
+		var sec = int(elapsedTime)
+		var h = sec / (60*60)
+		sec -= h * (60*60)
+		var m = sec / 60
+		sec -= m * 60
+		$TimeLabel.text = "%d:%02d:%02d" % [h, m, sec]
+		#
 	if pressed && !long_pressed && !editMode:
 		if OS.get_ticks_msec() - pressed_ticks >= 500:		# 0.5秒経過
 			print("long_pressed")
