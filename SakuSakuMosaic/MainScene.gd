@@ -17,7 +17,7 @@ var qix					# 問題番号 [0, N]
 var qID					# 問題ID
 var qSolved = false		# 現問題をクリア済みか？
 var qSolvedStat = false		# 現問題をクリア状態か？
-var elapsedTime = 0.0	# 経過時間（単位：秒）
+var elapsedTime : float = 0.0	# 経過時間（単位：秒）
 var hintTime = 0.0		# != 0 の間はヒント使用不可（単位：秒）
 var mode = MODE_EDIT_PICT;
 var dialog_opened = false;
@@ -32,6 +32,7 @@ var pressed = false;		# true for マウス押下時
 var long_pressed = false	# 長押しされた
 var solving = false			# 
 var solved = false
+var paused = false
 var quest_genarated = false
 #var crnt_color = 3
 var pressed_ticks = 0		# 押下時タイム
@@ -229,9 +230,20 @@ func _input(event):
 				$PressedAudio.play()
 			pressed = false
 			if is_solved():		# 問題クリア
-				qSolved = true	# クリア済みフラグ
-				if !qSolvedStat:		# クリア済みフラグOFFの場合
-					qSolvedStat = true
+				qSolvedStat = true	# クリア済みフラグ
+				if !qSolved:		# クリア済みフラグOFFの場合
+					qSolved = true
+				var lst = []
+				for y in range(g.N_IMG_CELL_VERT):
+					lst.push_back(get_h_data(y))
+				lst.push_back(int(elapsedTime))		# クリアタイム
+				#
+				if( g.solvedPat.has(qID) &&
+						g.solvedPat[qID].size() == g.N_IMG_CELL_VERT + 1):		# クリアタイムが記録されている場合
+					lst[g.N_IMG_CELL_VERT] = g.solvedPat[qID][g.N_IMG_CELL_VERT]
+				g.solvedPat[qID] = lst
+				saveSolvedPat()
+				##$BoardBG/titleLabel.text = g.quest_list[qix][g.KEY_TITLE]
 				$MessLabel.text = "問題クリア。Good Job !"
 			else:
 				qSolvedStat = false
@@ -246,7 +258,7 @@ func is_solved():
 				if count_black(x, y) != int(label.text): return false
 	return true;
 func _process(delta):
-	if !qSolvedStat:	# クリア済みでない場合
+	if !paused && !qSolvedStat:		# 非ポーズ && クリア済みでない場合
 		elapsedTime += delta
 		var sec = int(elapsedTime)
 		var h = sec / (60*60)
@@ -689,4 +701,5 @@ func _on_Auto0Button_pressed():
 		for x in range(g.N_IMG_CELL_HORZ):
 			if clueLabels[g.xyToBoardIX(x, y)].text == "0":
 				cell_long_pressed(x, y)
+	paused = false
 	pass # Replace with function body.

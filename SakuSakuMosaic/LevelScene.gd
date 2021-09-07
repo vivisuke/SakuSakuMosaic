@@ -18,6 +18,20 @@ class MyCustomSorter:
 		return true if a[1] < b[1] else false
 
 func _ready():
+	var file = File.new()
+	if file.file_exists(g.settingsFileName):		# 設定ファイル
+		file.open(g.settingsFileName, File.READ)
+		g.settings = file.get_var()
+		file.close()
+		print(g.settings)
+	if !g.solvedPatLoaded:			# クリア履歴未読込の場合
+		g.solvedPatLoaded = true
+		#print(g.solvedPatFileName)
+		if file.file_exists(g.solvedPatFileName):
+			file.open(g.solvedPatFileName, File.READ)
+			g.solvedPat = file.get_var()
+			file.close()
+			##print(g.solvedPat)
 	#
 	g.ans_images.resize(g.quest_list.size())
 	g.qix2ID.resize(g.quest_list.size())
