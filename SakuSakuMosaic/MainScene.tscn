@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://TitleBar.gd" type="Script" id=1]
 [ext_resource path="res://images/black-4x4.png" type="Texture" id=2]
@@ -33,6 +33,7 @@
 [ext_resource path="res://images/auto_fix_gray.png" type="Texture" id=31]
 [ext_resource path="res://images/auto_fix_white.png" type="Texture" id=32]
 [ext_resource path="res://images/auto_fix.png" type="Texture" id=33]
+[ext_resource path="res://sounds/kirakira-3.mp3" type="AudioStream" id=34]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -335,9 +336,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PressedAudio" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 14 )
-
 [node name="LeftButton" type="TextureButton" parent="."]
 margin_left = 100.0
 margin_top = 730.0
@@ -434,6 +432,14 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Audio" type="Node2D" parent="."]
+
+[node name="Pressed" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 14 )
+
+[node name="Solved" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 34 )
 
 [connection signal="pressed" from="TitleBar/BackButton" to="." method="_on_BackButton_pressed"]
 [connection signal="pressed" from="ModeContainer/SolveButton" to="." method="_on_SolveButton_pressed"]

@@ -27,7 +27,8 @@ var pushed_xy = Vector2()
 var cell_val = 0
 #var nError = 0			# 
 
-var editMode = true			# 問題作成モード
+#var editMode = true			# 問題作成モード
+var solveMode = true			# 問題を解く モード
 var pressed = false;		# true for マウス押下時
 var long_pressed = false	# 長押しされた
 var solving = false			# 
@@ -53,7 +54,7 @@ func _ready():
 	#print(bd.ary_clues.size())
 	$MessLabel.text = ""
 	rng.randomize()
-	editMode = !g.solveMode
+	solveMode = g.solveMode
 	#qix = g.qNumber - 1
 	ary_clues.resize(g.ARY_SIZE)
 	ary_state.resize(g.ARY_SIZE)
@@ -77,7 +78,7 @@ func _ready():
 			#nl.text = String(x % 10)
 			$BoardBG.add_child(nl)
 			clueLabels[g.xyToBoardIX(x, y)] = nl
-	if !editMode:		# 「問題を解く」
+	if solveMode:		# 「問題を解く」
 		qix = g.qNumber - 1
 		qID = g.qix2ID[qix]
 		print("QID = ", qID)
@@ -94,10 +95,10 @@ func _ready():
 	update_ModeButtons()
 	pass # Replace with function body.
 func update_shift_buttons():
-	$LeftButton.disabled = !editMode
-	$RightButton.disabled = !editMode
-	$UpButton.disabled = !editMode
-	$DownButton.disabled = !editMode
+	$LeftButton.disabled = solveMode
+	$RightButton.disabled = solveMode
+	$UpButton.disabled = solveMode
+	$DownButton.disabled = solveMode
 func saveSolvedPat():
 	var file = File.new()
 	file.open(g.solvedPatFileName, File.WRITE)
@@ -109,7 +110,7 @@ func saveSettings():
 	file.store_var(g.settings)
 	file.close()
 func set_quest(quest : String):
-	if editMode: return
+	if !solveMode: return
 	var x = 0
 	var y = 0
 	for i in range(quest.length()):
@@ -234,7 +235,7 @@ func _input(event):
 			if long_pressed: long_pressed = false
 			elif xy.x >= 0 && xy == pressed_xy:
 				cell_pressed(xy.x, xy.y)
-				$PressedAudio.play()
+				$Audio/Pressed.play()
 			pressed = false
 			if is_solved():		# 問題クリア
 				qSolvedStat = true	# クリア済みフラグ
@@ -252,6 +253,7 @@ func _input(event):
 				saveSolvedPat()
 				##$BoardBG/titleLabel.text = g.quest_list[qix][g.KEY_TITLE]
 				$MessLabel.text = "問題クリア。Good Job !"
+				$Audio/Solved.play()
 			else:
 				qSolvedStat = false
 		#elif event.doubleclick:
@@ -274,12 +276,12 @@ func _process(delta):
 		sec -= m * 60
 		$TimeLabel.text = "%d:%02d:%02d" % [h, m, sec]
 		#
-	if pressed && !long_pressed && !editMode:
+	if pressed && !long_pressed && solveMode:
 		if OS.get_ticks_msec() - pressed_ticks >= 500:		# 0.5秒経過
 			print("long_pressed")
 			long_pressed = true
 			cell_long_pressed(pressed_xy.x, pressed_xy.y)
-			$PressedAudio.play()
+			$Audio/Pressed.play()
 func update_cluesLabelColor(x, y):
 	if x < 0 || x >= g.N_IMG_CELL_HORZ || y < 0 || y >= g.N_IMG_CELL_VERT:
 		return
@@ -309,7 +311,7 @@ func cell_pressed(x, y):
 	#solving = false
 	#solved = false
 	#print("(", x, ", ", y, ")")
-	if editMode:	# 問題を作る モード
+	if !solveMode:	# 問題を作る モード
 		if $BoardBG/TileMap.get_cell(x, y) != BLACK:
 			$BoardBG/TileMap.set_cell(x, y, BLACK)
 		else:
@@ -369,7 +371,7 @@ func _on_ClearButton_pressed():
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
 			$BoardBG/TileMap.set_cell(x, y, UNKNOWN)
-	if editMode:
+	if !solveMode:
 		update_cluesLabel()
 	else:
 		update_allCluesLabel()
@@ -427,13 +429,13 @@ func _on_BasicButton_pressed():
 	return
 
 func update_ModeButtons():
-	$ModeContainer/SolveButton/Underline.visible = !editMode
-	$ModeContainer/EditPictButton/Underline.visible = editMode
+	$ModeContainer/SolveButton/Underline.visible = solveMode
+	$ModeContainer/EditPictButton/Underline.visible = !solveMode
 
 func _on_SolveButton_pressed():
-	if !editMode:
+	if solveMode:
 		return
-	editMode = false
+	solveMode = true
 	update_ModeButtons()
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
@@ -445,9 +447,9 @@ func _on_SolveButton_pressed():
 	pass # Replace with function body.
 
 func _on_EditPictButton_pressed():
-	if editMode:
+	if !solveMode:
 		return
-	editMode = true
+	solveMode = false
 	update_ModeButtons()
 	for y in range(g.N_IMG_CELL_VERT):
 		for x in range(g.N_IMG_CELL_HORZ):
@@ -458,7 +460,7 @@ func _on_EditPictButton_pressed():
 
 
 func _on_TestButton_pressed():
-	if editMode:
+	if !solveMode:
 		return
 	set_quest(g.quest_list[0][g.KEY_CLUES])
 	update_allCluesLabel()
