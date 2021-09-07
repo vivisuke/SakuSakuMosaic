@@ -31,7 +31,7 @@ func _ready():
 			file.open(g.solvedPatFileName, File.READ)
 			g.solvedPat = file.get_var()
 			file.close()
-			##print(g.solvedPat)
+			print(g.solvedPat)
 	#
 	g.ans_images.resize(g.quest_list.size())
 	g.qix2ID.resize(g.quest_list.size())

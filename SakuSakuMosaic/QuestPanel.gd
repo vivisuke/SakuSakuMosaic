@@ -5,8 +5,8 @@ signal pressed(num)
 const RADIUS = 10
 const POSITION = Vector2(2, 2)
 const SIZE = Vector2(480-10, 90)
-const IMG_WIDTH = 20		# for 20x20
-const IMG_HEIGHT = 20		# for 20x20
+const IMG_WIDTH = 15		# for 15x15
+const IMG_HEIGHT = 15		# for 15x15
 const TNCELLWD = 3
 const THUMBNAIL_WIDTH = IMG_WIDTH*TNCELLWD
 const THUMBNAIL_POS = (90-THUMBNAIL_WIDTH)/2+2
@@ -30,6 +30,13 @@ func set_star(n : int):		# n: [0, 3]
 func set_number(n : int):
 	number = n
 	$Number.text = "#%d" % n
+func set_ans_image(ai):
+	if !ai.empty():
+		$Question.hide()
+	else:
+		$Question.show()
+	ans_iamge = ai
+	update()
 func set_difficulty(n : int):
 	$Difficulty.text = "難易度 %d" % n
 func set_title(ttl):
@@ -69,7 +76,7 @@ func _input(event):
 		if get_global_rect() != saved_pos || !get_global_rect().has_point(event.position):	# 
 			mouse_pushed = false;
 			update()
-	print("mouse_pushed = ", mouse_pushed)
+	#print("mouse_pushed = ", mouse_pushed)
 func _draw():
 	# 外枠
 	var style_box = StyleBoxFlat.new()

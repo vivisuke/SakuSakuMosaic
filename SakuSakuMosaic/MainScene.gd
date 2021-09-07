@@ -4,11 +4,11 @@ const BLACK = 0
 const CROSS = 1
 const UNKNOWN = -1
 
-const TILE_NONE = -1
-const TILE_CROSS = 0		# ☓
-const TILE_BLACK = 1
-const TILE_BG_YELLOW = 0
-const TILE_BG_GRAY = 1
+#const TILE_NONE = -1
+#const TILE_CROSS = 0		# ☓
+#const TILE_BLACK = 1
+#const TILE_BG_YELLOW = 0
+#const TILE_BG_GRAY = 1
 
 enum { MODE_SOLVE, MODE_EDIT_PICT, MODE_EDIT_CLUES, }
 enum { SET_CELL, SET_CELL_BE, CLEAR_ALL, ROT_LEFT, ROT_RIGHT, ROT_UP, ROT_DOWN}
@@ -54,7 +54,7 @@ func _ready():
 	$MessLabel.text = ""
 	rng.randomize()
 	editMode = !g.solveMode
-	qix = g.qNumber - 1
+	#qix = g.qNumber - 1
 	ary_clues.resize(g.ARY_SIZE)
 	ary_state.resize(g.ARY_SIZE)
 	for i in range(g.ARY_SIZE):
@@ -78,12 +78,17 @@ func _ready():
 			$BoardBG.add_child(nl)
 			clueLabels[g.xyToBoardIX(x, y)] = nl
 	if !editMode:		# 「問題を解く」
+		qix = g.qNumber - 1
+		qID = g.qix2ID[qix]
+		print("QID = ", qID)
 		$TitleBar/QuestLabel.text = (("#%d" % g.qNumber) + (", 難易度%d" % g.quest_list[qix][g.KEY_DIFFICULTY]) +
 						", '" + g.quest_list[qix][g.KEY_TITLE][0] + "???' by " +
 						g.quest_list[qix][g.KEY_AUTHOR])
 		set_quest(g.quest_list[qix][g.KEY_CLUES])
 		update_allCluesLabel()
 		$ModeContainer/EditPictButton.disabled = true
+	else:
+		pass
 	update_shift_buttons()
 	update_MiniMap()
 	update_ModeButtons()
@@ -122,22 +127,24 @@ func set_quest(quest : String):
 func get_h_data(y0):
 	var data = 0
 	for x in range(g.N_IMG_CELL_HORZ):
-		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x, y0) == TILE_BLACK else 0)
+		if y0 == 0:
+			print($BoardBG/TileMap.get_cell(x, y0) == BLACK)
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x, y0) == BLACK else 0)
 	return data
 func get_h_data0(y0):
 	var data = 0
 	for x in range(g.N_IMG_CELL_HORZ):
-		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x, y0) == TILE_CROSS else 0)
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x, y0) == CROSS else 0)
 	return data
 func get_v_data(x0):
 	var data = 0
 	for y in range(g.N_IMG_CELL_VERT):
-		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x0, y) == TILE_BLACK else 0)
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x0, y) == BLACK else 0)
 	return data
 func get_v_data0(x0):
 	var data = 0
 	for y in range(g.N_IMG_CELL_VERT):
-		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x0, y) == TILE_CROSS else 0)
+		data = data * 2 + (1 if $BoardBG/TileMap.get_cell(x0, y) == CROSS else 0)
 	return data
 #func xyToAryIX(x, y):
 #	return (y+1)*g.ARY_WIDTH + (x+1)
@@ -521,10 +528,11 @@ func _on_BackButton_pressed():
 		var lst = []
 		for y in range(g.N_IMG_CELL_VERT):
 			lst.push_back(get_h_data(y))
-		lst.push_back(-int(elapsedTime))
+		lst.push_back(-int(elapsedTime))		# 経過時間（単位：秒）
 		for y in range(g.N_IMG_CELL_VERT):
 			lst.push_back(get_h_data0(y))
 		g.solvedPat[qID] = lst
+		print("saved = ", lst)
 		saveSolvedPat()
 	get_tree().change_scene("res://LevelScene.tscn")
 	pass # Replace with function body.
